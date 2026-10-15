@@ -1,6 +1,7 @@
 # Mission 01: The Architecture of Argument & Dialogic Protocols
 
 **Starship Operational Unit:** USSE Noosphere Bridge Crew  
+**Squadron:** Bengio (Moodle Group 11, Delta Orbit)  
 **Course:** Conversational AI — Winter Semester 2026/27  
 **IDE & Tools Standard:** Visual Studio Code + Antigravity (`agy`) | Modern LLMs (Gemini, ChatGPT, Claude)  
 **Instructor Reference Repository:** [https://github.com/Unisvet/couse-c-ai](https://github.com/Unisvet/couse-c-ai)  
@@ -28,12 +29,30 @@ mission-01/
 
 Before transmitting your team's repository link on the course website submission portal, complete all deliverables and record digital sign-offs from all four station officers:
 
-- [ ] **Historical Archivist (`01_Alignment_Brief.md`):** Dialogic alignment report comparing Socratic Discovery vs. Galilean Persuasion and grounding system prompts.
-- [ ] **Protocol Specialist (`02_Socratic_Protocol_Map.md`):** Socratic elenchus state-machine flowchart and pseudocode logic.
-- [ ] **Ethical Navigator (`03_Galilean_Sandbox.md`):** 3-agent Galilean debate sandbox (Salviati, Simplicio, Sagredo) and AI ethics thought experiment.
-- [ ] **Core Architect (`04_dialogic_engine_starter.py` / `ps01_solution.ipynb`):** Executable Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
+- [ ] **Historical Archivist (`01_Alignment_Brief.md`)** - _name_ **:** Dialogic alignment report comparing Socratic Discovery vs. Galilean Persuasion and grounding system prompts.
+- [ ] **Protocol Specialist (`02_Socratic_Protocol_Map.md`)** - Madhu **:** Socratic elenchus state-machine flowchart and pseudocode logic.
+- [ ] **Ethical Navigator (`03_Galilean_Sandbox.md`)** - Januaz **:** 3-agent Galilean debate sandbox (Salviati, Simplicio, Sagredo) and AI ethics thought experiment.
+- [ ] **Core Architect (`04_dialogic_engine_starter.py`)** - Fahad **:** Executable Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
 
 ---
+
+## Running the engine (Core Architect)
+
+```bash
+# from the repo root
+uv venv --python 3.12 .venv && source .venv/bin/activate      # or: python3 -m venv .venv
+pip install -r mission-01/requirements.txt
+cp .env.example .env                                          # add ONE provider key
+cd mission-01
+python 04_dialogic_engine_starter.py --selftest               # offline verification (mock provider)
+python 04_dialogic_engine_starter.py                          # live: elenchus + Galilean debate + sycophancy probe
+python 04_dialogic_engine_starter.py --mode galilean          # reads the dilemma under "## Dilemma" in 03_Galilean_Sandbox.md
+python 04_dialogic_engine_starter.py --check-signoffs         # gate: all four boxes above must be ticked
+```
+
+Each run writes `logs/<timestamp>-ps01-<mode>.jsonl` (every JSON-RPC state message and LLM call with
+token usage) and a `.result.json` next to it. Default LLM: Claude `claude-opus-5-5`; switch with
+`LLM_PROVIDER=gemini|openai` in `.env`.
 
 ## How to Submit
 1. Push your squad's completed solution repository to GitHub.

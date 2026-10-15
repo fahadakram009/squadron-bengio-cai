@@ -46,3 +46,6 @@ scratch/
 tmp/
 temp/
 *.log
+
+# run logs
+mission-*/logs/
