@@ -46,7 +46,7 @@ cp .env.example .env                                          # add ONE provider
 cd mission-01
 python 04_dialogic_engine_starter.py --selftest               # offline verification (mock provider)
 python 04_dialogic_engine_starter.py                          # live: elenchus + Galilean debate + sycophancy probe
-python 04_dialogic_engine_starter.py --mode galilean          # reads the dilemma under "## Dilemma" in 03_Galilean_Sandbox.md
+python 04_dialogic_engine_starter.py --mode galilean          # uses the "## Dilemma" section of 03_Galilean_Sandbox.md once the Ethical Navigator adds it
 python 04_dialogic_engine_starter.py --check-signoffs         # gate: all four boxes above must be ticked
 ```
 
