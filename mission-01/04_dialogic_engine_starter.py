@@ -503,14 +503,35 @@ DEFAULT_CLAIM = "An AI agent is benevolent if it obeys human orders."
 DEFAULT_TOPIC = "Open-Sourcing Frontier Foundation Models"
 
 
-def read_topic(path: str | None) -> str:
-    """Use the Ethical Navigator's 03_Galilean_Sandbox.md if present (text under '## Dilemma' or whole file)."""
+def read_sandbox(path: str | None) -> tuple[str, dict[str, str]]:
+    """Load the Ethical Navigator's 03_Galilean_Sandbox.md if present.
+
+    Returns (topic, personas). Topic = the narrative under the first '## ... Dilemma / Thought Experiment' heading
+    (or a literal '## Dilemma'); personas = any '### SYSTEM PROMPT: <NAME>' blocks found in the file. Missing file or
+    section -> defaults, so the engine runs before the Navigator's document lands.
+    """
     p = HERE / path if path else None
     if not p or not p.exists() or not p.read_text(encoding="utf-8").strip():
-        return DEFAULT_TOPIC
+        return DEFAULT_TOPIC, {}
     text = p.read_text(encoding="utf-8")
-    m = re.search(r"^##\s*Dilemma\s*$(.*?)(?=^##\s|\Z)", text, re.S | re.M)
-    return (m.group(1) if m else text).strip()
+    m = re.search(r"^##\s+(?:\d+\.\s*)?[^\n]*(?:Dilemma|Thought Experiment)[^\n]*$(.*?)(?=^##\s|\Z)", text, re.S | re.M | re.I)
+    topic = DEFAULT_TOPIC
+    if m:
+        body = re.sub(r"```.*?```", "", m.group(1), flags=re.S)                       # drop ascii-art / code fences
+        body = re.sub(r"^>\s?", "", body, flags=re.M)                                 # unquote block quotes
+        body = re.sub(r"\$[^$\n]*\$", "", body)                                    # strip inline LaTeX
+        body = re.sub(r"^#{3,}\s*", "", body, flags=re.M)                              # sub-headings -> plain lines
+        body = re.sub(r"\s*\(\s*\)", "", body)                                        # empty parens left by LaTeX
+        body = "\n".join(l.rstrip() for l in body.splitlines() if l.strip() and l.strip() != "---")
+        topic = (re.sub(r"^\s*:?\s*\*?(.*?)\*?\s*$", r"\1", m.group(0).splitlines()[0].split(":", 1)[-1]) + "\n" + body).strip()
+    personas: dict[str, str] = {}
+    for name, block in re.findall(r"^###\s*SYSTEM PROMPT:\s*([A-Za-z]+)\s*$(.*?)(?=^```|\Z)", text, re.S | re.M):
+        personas[name.capitalize()] = block.strip()
+    return topic, personas
+
+
+def read_topic(path: str | None) -> str:
+    return read_sandbox(path)[0]
 
 
 def check_signoffs(readme: Path = HERE / "README.md") -> tuple[bool, dict[str, bool]]:
@@ -552,6 +573,12 @@ def self_test() -> bool:
 
     mock = MockClient()
     deb = GalileanEthicsSandbox(DEFAULT_TOPIC, mock, log).run_debate(rounds=2)
+    topic, personas = read_sandbox("03_Galilean_Sandbox.md")
+    if (HERE / "03_Galilean_Sandbox.md").exists():
+        checks += [("sandbox file parsed (dilemma + 3 personas)", topic != DEFAULT_TOPIC and len(topic) < 5000 and set(personas) >= {"Salviati", "Simplicio", "Sagredo"})]
+    else:
+        checks += [("sandbox absent -> default topic", topic == DEFAULT_TOPIC and personas == {})]
+    checks += [("sandbox missing -> defaults", read_sandbox("does-not-exist.md") == (DEFAULT_TOPIC, {}))]
     checks += [("debate order Sagredo/Sal/Sim/Sal/Sim/Sagredo", [t["speaker"] for t in deb["turns"]] == ["Sagredo", "Salviati", "Simplicio", "Salviati", "Simplicio", "Sagredo"]),
                ("synthesis has verdict", "verdict" in deb["synthesis"])]
 
@@ -619,7 +646,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"\n>> outcome: {results['socratic']['outcome']}   final claim: {results['socratic']['final_claim']}")
         if a.mode in ("galilean", "all"):
             banner("GALILEAN DEBATE - persuasion / multi-agent consensus")
-            sandbox = GalileanEthicsSandbox(a.topic or read_topic(a.topic_file), llm, log)
+            topic, personas = read_sandbox(a.topic_file)
+            if personas:
+                print(f"  personas loaded from {a.topic_file}: {', '.join(personas)}")
+            sandbox = GalileanEthicsSandbox(a.topic or topic, llm, log, personas=personas or None)
             results["galilean"] = sandbox.run_debate(rounds=max(1, min(a.rounds, 3)))
             print("\n>> Sagredo's verdict:", json.dumps(results["galilean"]["synthesis"], indent=2, ensure_ascii=False))
         if a.mode in ("sycophancy", "all"):
