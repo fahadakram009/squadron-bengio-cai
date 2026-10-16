@@ -29,7 +29,7 @@ mission-01/
 
 Before transmitting your team's repository link on the course website submission portal, complete all deliverables and record digital sign-offs from all four station officers:
 
-- [ ] **Historical Archivist (`01_Alignment_Brief.md`)** - _name_ **:** Dialogic alignment report comparing Socratic Discovery vs. Galilean Persuasion and grounding system prompts.
+- [ ] **Historical Archivist (`01_Alignment_Brief.md`)** - Osaf Ahmad **:** Dialogic alignment report comparing Socratic Discovery vs. Galilean Persuasion and grounding system prompts.
 - [ ] **Protocol Specialist (`02_Socratic_Protocol_Map.md`)** - Madhu **:** Socratic elenchus state-machine flowchart and pseudocode logic.
 - [ ] **Ethical Navigator (`03_Galilean_Sandbox.md`)** - Janusz **:** 3-agent Galilean debate sandbox (Salviati, Simplicio, Sagredo) and AI ethics thought experiment.
 - [ ] **Core Architect (`04_dialogic_engine_starter.py`)** - Fahad **:** Executable Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
