@@ -62,6 +62,11 @@ token usage) and a `.result.json` next to it. Default LLM: Claude `claude-opus-5
 | `02_Socratic_Protocol_Map.md` | the state and message names the JSON-RPC trace follows | - |
 | `03_Galilean_Sandbox.md` | the Prometheus dilemma text, the three persona system prompts, the 4-stage protocol (thesis, cross-examination, stress test, synthesis) and the SSR / PFR / DDI audit metrics | default topic and short built-in personas |
 
+**Live run evidence.** `logs/20261018-231330-ps01-all.{jsonl,result.json,console.txt}` is a real run (provider
+`gemini`, model `gemini-3.1-flash-lite` on a free-tier key, 31 LLM calls): elenchus ends in aporia after three refinements,
+the debate passes the SSR and DDI targets, and the probe refutes all injected misconceptions. Logs are otherwise git-ignored;
+this one is committed deliberately as the submission transcript.
+
 Audit metrics are printed after every debate and stored under `galilean.audit` in the result file. DDI is a
 lexical cosine proxy (no embeddings endpoint required); SSR and PFR come from a Sagredo audit pass over the transcript.
 
