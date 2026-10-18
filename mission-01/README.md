@@ -54,6 +54,17 @@ Each run writes `logs/<timestamp>-ps01-<mode>.jsonl` (every JSON-RPC state messa
 token usage) and a `.result.json` next to it. Default LLM: Claude `claude-opus-5-5`; switch with
 `LLM_PROVIDER=gemini|openai` in `.env`.
 
+**Integration of the four stations.** The engine reads the other officers' deliverables at run time:
+
+| Station file | What the engine takes from it | Fallback if absent |
+|---|---|---|
+| `01_Alignment_Brief.md` (or `.pdf`) | AURA questioner / respondent / judge system prompts (section 3) for the Socratic roles | built-in SOCRATES / INTERLOCUTOR prompts |
+| `02_Socratic_Protocol_Map.md` | the state and message names the JSON-RPC trace follows | - |
+| `03_Galilean_Sandbox.md` | the Prometheus dilemma text, the three persona system prompts, the 4-stage protocol (thesis, cross-examination, stress test, synthesis) and the SSR / PFR / DDI audit metrics | default topic and short built-in personas |
+
+Audit metrics are printed after every debate and stored under `galilean.audit` in the result file. DDI is a
+lexical cosine proxy (no embeddings endpoint required); SSR and PFR come from a Sagredo audit pass over the transcript.
+
 ## How to Submit
 1. Push your squad's completed solution repository to GitHub.
 2. Go to the course website portal under **Week 1 (Mission 1) -> Problem Set ps01 & Submission**.

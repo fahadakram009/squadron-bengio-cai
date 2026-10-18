@@ -1,5 +1,6 @@
 anthropic>=1.0
 python-dotenv>=1.0
+pypdf>=4.0            # reads 01_Alignment_Brief.pdf when the Archivist's brief has no .md version
 # optional providers:
 # google-genai>=1.0
 # openai>=1.50
