@@ -162,7 +162,9 @@ class GeminiClient:
         contents = [t.Content(role="user" if m["role"] == "user" else "model", parts=[t.Part(text=m["content"])]) for m in messages]
         r = self._with_backoff(lambda: self._client.models.generate_content(
             model=self.model, contents=contents,
-            config=t.GenerateContentConfig(system_instruction=system, max_output_tokens=max_tokens),
+            # Gemini 3.x bills hidden thinking against max_output_tokens: keep thinking low and give the answer room.
+            config=t.GenerateContentConfig(system_instruction=system, max_output_tokens=max(max_tokens, 1024),
+                                           thinking_config=t.ThinkingConfig(thinking_level="low")),
         ))
         u = getattr(r, "usage_metadata", None)
         return LLMResponse(r.text or "", Usage(getattr(u, "prompt_token_count", 0) or 0, getattr(u, "candidates_token_count", 0) or 0), self.model, self.provider)
@@ -553,6 +555,14 @@ def read_questions(path: str = "01_Lovelace_Inquiry_Brief.md", n: int = 10) -> t
     return qs[:n], source
 
 
+def _field(r: LLMResponse, key: str) -> str:
+    """Take `key` from the model's JSON; if the reply is not JSON (e.g. truncated), fall back to its raw text."""
+    try:
+        return str(r.json().get(key, "")).strip() or r.text.strip()
+    except ValueError:
+        return r.text.strip().strip('"')
+
+
 def run_interrogation(llm, log: ExecutionLog, questions: list[str], seed: int | None = None) -> dict:
     channel = NoisyChannelSimulator(seed=seed)
     turns = []
@@ -560,10 +570,10 @@ def run_interrogation(llm, log: ExecutionLog, questions: list[str], seed: int | 
         log.event("say", f"Q{i}", q, who="INTERROGATOR")
         src = llm.complete(AURA_SOURCE_SYSTEM, [{"role": "user", "content": f"Interrogator: {q}"}], max_tokens=300, task="channel.source")
         log.llm("channel.source", src)
-        answer = str(src.json().get("answer", "")).strip()
+        answer = _field(src, "answer")
         enc = llm.complete(AURA_ENCODE_SYSTEM, [{"role": "user", "content": f"Question: {q}\nAnswer to encode: {answer}"}], max_tokens=120, task="channel.encode")
         log.llm("channel.encode", enc)
-        proposed = str(enc.json().get("transmission", "")).strip()
+        proposed = _field(enc, "transmission")
         ok, problems = channel.validate(proposed)
         tx = proposed if ok else channel.apply_channel_constraints(proposed)   # enforce the physics even if the model cheats
         m = channel.metrics(answer, tx)

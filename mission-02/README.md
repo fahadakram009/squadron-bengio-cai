@@ -59,6 +59,11 @@ Each run writes `logs/<timestamp>-ps02-<mode>.jsonl` (FST state trace, every LLM
 | `02_FST_and_Noisy_Protocol.md` | the five states, slot names and the 7-word / noise-token rule the code implements | - |
 | `03_Entropy_Hazard_Audit.md` | the five non-canonical utterances (quoted under a heading containing "stress") used for the brittleness benchmark | built-in stress set |
 
+**Live run evidence.** `05_Noisy_Interrogation_Transcript.md` and `logs/20261019-122810-ps02-all.*` come from a real run
+(provider `gemini`, models gemini-3.8-flash then gemini-3.5-flash after the free-tier daily quota, 21 LLM calls): all ten
+transmissions obey the 7-word / noise-token channel, receiver-judged fidelity 0.86, human-likeness 0.44, 3 of 10 turns
+judged HUMAN; the FST breaks on 3 of 5 non-canonical utterances. Logs are otherwise git-ignored; these are committed deliberately.
+
 Metrics per turn and per run: Shannon entropy H of source and transmitted word streams (bits/word), noise-token rate p,
 erasure-channel capacity bound C = 1 - p, lexical retention of source content words, receiver-judged fidelity and
 human-likeness, and the FST's state-sequence entropy (2.0 bits for a canonical run, higher once FALLBACK appears).

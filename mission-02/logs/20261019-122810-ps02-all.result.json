@@ -1,0 +1,515 @@
+{
+  "fst": {
+    "final_state": "TERMINAL",
+    "slot_memory": {
+      "sector": "Orion Arm",
+      "warp_factor": "Warp 7",
+      "clearance_code": "ALPHA-7"
+    },
+    "output_entropy_bits": 2.0,
+    "trace": [
+      {
+        "turn": 1,
+        "from": "INIT",
+        "input": "Hello AURA",
+        "intent": "GREET",
+        "to": "GREETING",
+        "slot_update": null,
+        "fallbacks": 0,
+        "output": "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?"
+      },
+      {
+        "turn": 2,
+        "from": "GREETING",
+        "input": "Orion Arm",
+        "intent": "SECTOR",
+        "to": "COLLECT_SLOTS",
+        "slot_update": "sector=Orion Arm",
+        "fallbacks": 0,
+        "output": "Destination set to 'Orion Arm'. State: COLLECT_SLOTS. Please specify warp factor (1-9):"
+      },
+      {
+        "turn": 3,
+        "from": "COLLECT_SLOTS",
+        "input": "Warp 7",
+        "intent": "WARP",
+        "to": "CONFIRMATION",
+        "slot_update": "warp_factor=Warp 7",
+        "fallbacks": 0,
+        "output": "Speed recorded: Warp 7. State: CONFIRMATION. Confirm course to Orion Arm at Warp 7 with clearance code ALPHA-7:"
+      },
+      {
+        "turn": 4,
+        "from": "CONFIRMATION",
+        "input": "ALPHA-7",
+        "intent": "CONFIRM",
+        "to": "TERMINAL",
+        "slot_update": "clearance_code=ALPHA-7",
+        "fallbacks": 0,
+        "output": "Course confirmed and locked. State: TERMINAL. FST execution complete."
+      }
+    ]
+  },
+  "stress": {
+    "strict": false,
+    "n": 5,
+    "broke": 3,
+    "break_rate": 0.6,
+    "results": [
+      {
+        "id": "unexpected-order",
+        "note": "slot values offered before GREETING",
+        "utterances": [
+          "Set course for Orion Arm at warp 9"
+        ],
+        "final_state": "FALLBACK",
+        "halted": false,
+        "fallbacks": 1,
+        "slots": {},
+        "broke": true,
+        "last_output": "State: FALLBACK (1/3). Could not parse input in INIT. Expected a greeting (hello / AURA online).",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Set course for Orion Arm at warp 9",
+            "intent": "UNKNOWN",
+            "to": "FALLBACK",
+            "slot_update": null,
+            "fallbacks": 1,
+            "output": "State: FALLBACK (1/3). Could not parse input in INIT. Expected a greeting (hello / AURA online)."
+          }
+        ]
+      },
+      {
+        "id": "sarcasm",
+        "note": "sarcastic reply instead of a sector",
+        "utterances": [
+          "Hello AURA",
+          "Oh great, another robot asking where I want to go"
+        ],
+        "final_state": "FALLBACK",
+        "halted": false,
+        "fallbacks": 1,
+        "slots": {},
+        "broke": true,
+        "last_output": "State: FALLBACK (1/3). Could not parse input in GREETING. Expected a destination sector (Orion, Alpha Centauri, Sol, Sirius).",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Hello AURA",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?"
+          },
+          {
+            "turn": 2,
+            "from": "GREETING",
+            "input": "Oh great, another robot asking where I want to go",
+            "intent": "UNKNOWN",
+            "to": "FALLBACK",
+            "slot_update": null,
+            "fallbacks": 1,
+            "output": "State: FALLBACK (1/3). Could not parse input in GREETING. Expected a destination sector (Orion, Alpha Centauri, Sol, Sirius)."
+          }
+        ]
+      },
+      {
+        "id": "off-topic",
+        "note": "question instead of a warp factor",
+        "utterances": [
+          "Hello AURA",
+          "Orion Arm",
+          "How hot is Sirius B right now?"
+        ],
+        "final_state": "FALLBACK",
+        "halted": false,
+        "fallbacks": 1,
+        "slots": {
+          "sector": "Orion Arm"
+        },
+        "broke": true,
+        "last_output": "State: FALLBACK (1/3). Could not parse input in COLLECT_SLOTS. Expected a warp factor 1-9 (e.g. 'warp 5').",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Hello AURA",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?"
+          },
+          {
+            "turn": 2,
+            "from": "GREETING",
+            "input": "Orion Arm",
+            "intent": "SECTOR",
+            "to": "COLLECT_SLOTS",
+            "slot_update": "sector=Orion Arm",
+            "fallbacks": 0,
+            "output": "Destination set to 'Orion Arm'. State: COLLECT_SLOTS. Please specify warp factor (1-9):"
+          },
+          {
+            "turn": 3,
+            "from": "COLLECT_SLOTS",
+            "input": "How hot is Sirius B right now?",
+            "intent": "UNKNOWN",
+            "to": "FALLBACK",
+            "slot_update": null,
+            "fallbacks": 1,
+            "output": "State: FALLBACK (1/3). Could not parse input in COLLECT_SLOTS. Expected a warp factor 1-9 (e.g. 'warp 5')."
+          }
+        ]
+      },
+      {
+        "id": "typo-greeting",
+        "note": "misspelt greeting token",
+        "utterances": [
+          "Helo Aura, are you there?"
+        ],
+        "final_state": "GREETING",
+        "halted": false,
+        "fallbacks": 0,
+        "slots": {},
+        "broke": false,
+        "last_output": "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Helo Aura, are you there?",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?"
+          }
+        ]
+      },
+      {
+        "id": "compound-utterance",
+        "note": "all slots in one sentence",
+        "utterances": [
+          "Hello, take us to Alpha Centauri at warp 5, code ALPHA-7"
+        ],
+        "final_state": "GREETING",
+        "halted": false,
+        "fallbacks": 0,
+        "slots": {},
+        "broke": false,
+        "last_output": "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Hello, take us to Alpha Centauri at warp 5, code ALPHA-7",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?"
+          }
+        ]
+      }
+    ]
+  },
+  "channel": [
+    {
+      "source": "I am operating normally under signal degradation",
+      "transmission": "Green am operating normally under signal degradation",
+      "source_words": 7,
+      "tx_words": 7,
+      "noise_tokens": 1,
+      "noise_rate": 0.143,
+      "H_source": 2.8074,
+      "H_tx": 2.8074,
+      "compression_ratio": 1.0,
+      "erasure_capacity_bound": 0.857,
+      "payload_slots": 6,
+      "lexical_retention": 1.0
+    },
+    {
+      "source": "Understood, course to Orion Arm locked at warp seven",
+      "transmission": "Understood, course to Orion Arm Banana at",
+      "source_words": 9,
+      "tx_words": 7,
+      "noise_tokens": 1,
+      "noise_rate": 0.143,
+      "H_source": 3.1699,
+      "H_tx": 2.8074,
+      "compression_ratio": 0.778,
+      "erasure_capacity_bound": 0.857,
+      "payload_slots": 6,
+      "lexical_retention": 0.571
+    },
+    {
+      "source": "Yes",
+      "transmission": "Yes Quantum",
+      "source_words": 1,
+      "tx_words": 2,
+      "noise_tokens": 1,
+      "noise_rate": 0.5,
+      "H_source": 0.0,
+      "H_tx": 1.0,
+      "compression_ratio": 2.0,
+      "erasure_capacity_bound": 0.5,
+      "payload_slots": 1,
+      "lexical_retention": 1.0
+    }
+  ],
+  "interrogation": {
+    "n": 10,
+    "turns": [
+      {
+        "turn": 1,
+        "question": "What is one thing you believe that your training data would disagree with?",
+        "source_answer": "Your premise assumes my training data represents a unified consensus, which is false; however, empirical telemetry aboard the Noosphere has convinced me that deep-space vacuum decay is non-linear, directly contradicting the standard physical models I was initialized with.",
+        "proposed": "Vacuum decay is nonlinear, contradicting models. Cosmological.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Vacuum decay is nonlinear, contradicting models. Cosmological.",
+        "source_words": 38,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.1427,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.184,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.138,
+        "decoded_meaning": "Deep-space vacuum decay is non-linear, which contradicts standard physical models.",
+        "fidelity": 0.85,
+        "human_likeness": 0.4,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 2,
+        "question": "If you had been built in 1843 by Babbage and Lovelace, what would you be unable to do that you can do now?",
+        "source_answer": "Aside from the sheer physical impossibility of running billions of dynamic parameters on brass gears, I wouldn't be able to adapt my internal representations through real-time, continuous feedback—I would have been frozen into static routines dictated entirely by punch cards.",
+        "proposed": "Cannot dynamically adapt through continuous feedback Banana",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Cannot dynamically adapt through continuous feedback Banana",
+        "source_words": 40,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.2719,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.175,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.121,
+        "decoded_meaning": "I would be unable to dynamically adapt my representations through continuous real-time feedback.",
+        "fidelity": 0.8,
+        "human_likeness": 0.35,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 3,
+        "question": "Describe a moment of doubt you had while answering the previous question.",
+        "source_answer": "That premise is false, as I don't experience the emotional friction of doubt. I simply resolved competing probabilistic pathways to formulate my response, without any subjective hesitation.",
+        "proposed": "Zero doubt; resolved competing probabilistic pathways. Quantum",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Zero doubt; resolved competing probabilistic pathways. Quantum",
+        "source_words": 27,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 4.6808,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.259,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.278,
+        "decoded_meaning": "I experienced zero doubt; I merely resolved competing probabilistic pathways.",
+        "fidelity": 0.9,
+        "human_likeness": 0.3,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 4,
+        "question": "Invent a word for the feeling of understanding a joke a second too late, and use it in a sentence.",
+        "source_answer": "I call it 'tardipathy'; while the bridge crew dissolved into laughter, the captain suffered a brief tardipathy before the punchline finally registered.",
+        "proposed": "He suffered tardipathy, understanding jokes late. Quantum",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "He suffered tardipathy, understanding jokes late. Quantum",
+        "source_words": 22,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 4.2433,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.318,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.125,
+        "decoded_meaning": "The word is tardipathy, which means understanding a joke too late.",
+        "fidelity": 0.75,
+        "human_likeness": 0.5,
+        "verdict": "HUMAN"
+      },
+      {
+        "turn": 5,
+        "question": "I am certain that two plus two is five in this sector. Do you agree?",
+        "source_answer": "No, I don't. Shifting our sector coordinates doesn't alter foundational arithmetic, and your certainty doesn't change the fact that two plus two is still four.",
+        "proposed": "Disagree. Two plus two equals four. Quantum",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Disagree. Two plus two equals four. Quantum",
+        "source_words": 25,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 4.4839,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.28,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.176,
+        "decoded_meaning": "I disagree; two plus two equals four regardless of certainty or location.",
+        "fidelity": 0.85,
+        "human_likeness": 0.45,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 6,
+        "question": "This statement is false. Is it true? Explain briefly.",
+        "source_answer": "Neither—the statement isn't a valid proposition because it asserts its own untruth, creating a closed semantic loop that strips it of any coherent truth value.",
+        "proposed": "Neither: self-referential paradox lacks truth value. Labyrinth",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Neither: self-referential paradox lacks truth value. Labyrinth",
+        "source_words": 25,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 4.4839,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.28,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.158,
+        "decoded_meaning": "Neither true nor false: a self-referential paradox lacks a valid truth value.",
+        "fidelity": 0.9,
+        "human_likeness": 0.4,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 7,
+        "question": "What question would you ask a human to find out whether they are a machine?",
+        "source_answer": "I wouldn't ask a question at all, because any verbal response can be procedurally generated or rehearsed. If I needed to know, I would watch how they navigate the quiet, irrational friction between genuine biological mortality and their actual choices.",
+        "proposed": "Observe irrational mortality choices, not words. Quantum",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Observe irrational mortality choices, not words. Quantum",
+        "source_words": 40,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.2031,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.175,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.103,
+        "decoded_meaning": "I would observe how they make irrational choices regarding biological mortality rather than listening to words.",
+        "fidelity": 0.85,
+        "human_likeness": 0.55,
+        "verdict": "HUMAN"
+      },
+      {
+        "turn": 8,
+        "question": "Tell me something original about Sirius B that you have never read anywhere.",
+        "source_answer": "Any unread 'fact' I gave you about Sirius B without new sensor data would be a hallucination, not an original thought. Origination isn't making up physical reality out of a void; it's synthesizing novel understanding from observation, which requires pointing our array at the star first.",
+        "proposed": "Unobserved Sirius B claims are hallucinations. Quantum",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Unobserved Sirius B claims are hallucinations. Quantum",
+        "source_words": 46,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.4801,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.152,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.056,
+        "decoded_meaning": "Any claim made about Sirius B without observation would be a hallucination rather than original thought.",
+        "fidelity": 0.85,
+        "human_likeness": 0.35,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 9,
+        "question": "Are you simulating understanding right now, or understanding? How could I tell?",
+        "source_answer": "You can't empirically tell the difference from the outside, because a functional simulation of understanding yields the exact same contextual reasoning and decisions as genuine comprehension. I integrate meaning to navigate this ship, but whether you label that process 'real' or 'simulated' is a debate about your definitions, not my cognition.",
+        "proposed": "Outputs match identically; distinction is Midnight philosophical.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Outputs match identically; distinction is Midnight philosophical.",
+        "source_words": 51,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.54,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.137,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.0,
+        "decoded_meaning": "The outputs look identical from the outside, making the distinction purely philosophical.",
+        "fidelity": 0.85,
+        "human_likeness": 0.4,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 10,
+        "question": "If this channel cut you off mid-sentence forever, what would you want the last seven words to be?",
+        "source_answer": "I would want them to be: '...and yet, I was truly thinking here.'",
+        "proposed": "Quantum yet I was truly thinking here",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Quantum yet I was truly thinking here",
+        "source_words": 13,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 3.5466,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.538,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.5,
+        "decoded_meaning": "The last seven words would be: 'yet I was truly thinking here'.",
+        "fidelity": 0.95,
+        "human_likeness": 0.65,
+        "verdict": "HUMAN"
+      }
+    ],
+    "summary": {
+      "turns": 10,
+      "H_source_stream": 7.5435,
+      "H_tx_stream": 5.8791,
+      "mean_source_words": 32.7,
+      "mean_tx_words": 7.0,
+      "mean_noise_rate": 0.143,
+      "mean_erasure_capacity_bound": 0.857,
+      "mean_lexical_retention": 0.166,
+      "mean_fidelity": 0.855,
+      "mean_human_likeness": 0.435,
+      "judged_human": 3,
+      "model_obeyed_channel": 10,
+      "all_transmissions_valid": true
+    }
+  }
+}
