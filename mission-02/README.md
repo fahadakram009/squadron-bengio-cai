@@ -28,12 +28,40 @@ mission-02/
 
 Before transmitting your team's repository link on the course website submission portal, complete all deliverables and record digital sign-offs from all four station officers:
 
-- [ ] **Historical Archivist (`01_Lovelace_Inquiry_Brief.md`):** 5-question Anti-Turing interrogation protocol & modern LLM evaluation against Lovelace's objection.
-- [ ] **Protocol Specialist (`02_FST_and_Noisy_Protocol.md`):** `FSTDialogueManager` class implementation (5 required states & slot memory) + Noisy Channel Protocol (7-word limit + noise tokens).
-- [ ] **Ethical Navigator (`03_Entropy_Hazard_Audit.md`):** FST stress tests documenting state breakage + Shannon information entropy & hazard audit under noise.
-- [ ] **Core Architect (`04_fst_noisy_simulator_starter.py` / `ps02_solution.ipynb`):** Integrated Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
+- [ ] **Historical Archivist (`01_Lovelace_Inquiry_Brief.md`)** - Osaf Ahmad **:** 5-question Anti-Turing interrogation protocol & modern LLM evaluation against Lovelace's objection.
+- [ ] **Protocol Specialist (`02_FST_and_Noisy_Protocol.md`)** - Madhu **:** `FSTDialogueManager` class implementation (5 required states & slot memory) + Noisy Channel Protocol (7-word limit + noise tokens).
+- [ ] **Ethical Navigator (`03_Entropy_Hazard_Audit.md`)** - Janusz **:** FST stress tests documenting state breakage + Shannon information entropy & hazard audit under noise.
+- [ ] **Core Architect (`04_fst_noisy_simulator_starter.py`)** - Fahad **:** Integrated Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
 
 ---
+
+## Running the simulator (Core Architect)
+
+```bash
+# from the repo root (same .venv and .env as Mission 1)
+source .venv/bin/activate && pip install -r mission-02/requirements.txt
+cd mission-02
+python 04_fst_noisy_simulator_starter.py --selftest              # offline verification, 17 checks
+python 04_fst_noisy_simulator_starter.py --mode stress           # FST brittleness benchmark, no LLM needed
+python 04_fst_noisy_simulator_starter.py --mode stress --strict  # portal-style catastrophic failure
+python 04_fst_noisy_simulator_starter.py                         # live: FST demo + stress tests + channel demo + 10-turn noisy interrogation
+python 04_fst_noisy_simulator_starter.py --check-signoffs        # gate: all four boxes above must be ticked
+```
+
+Each run writes `logs/<timestamp>-ps02-<mode>.jsonl` (FST state trace, every LLM call with token usage) plus a
+`.result.json`; a live interrogation also writes `05_Noisy_Interrogation_Transcript.md` (the squad's Part 5 deliverable).
+
+**Integration of the four stations.** The simulator reads the other officers' files at run time:
+
+| Station file | What the simulator takes from it | Fallback if absent |
+|---|---|---|
+| `01_Lovelace_Inquiry_Brief.md` | the five Anti-Turing questions (numbered or quoted lines under a heading containing "question") open the interrogation | built-in question list |
+| `02_FST_and_Noisy_Protocol.md` | the five states, slot names and the 7-word / noise-token rule the code implements | - |
+| `03_Entropy_Hazard_Audit.md` | the five non-canonical utterances (quoted under a heading containing "stress") used for the brittleness benchmark | built-in stress set |
+
+Metrics per turn and per run: Shannon entropy H of source and transmitted word streams (bits/word), noise-token rate p,
+erasure-channel capacity bound C = 1 - p, lexical retention of source content words, receiver-judged fidelity and
+human-likeness, and the FST's state-sequence entropy (2.0 bits for a canonical run, higher once FALLBACK appears).
 
 ## How to Submit
 1. Push your squad's completed solution repository to GitHub.
