@@ -3,7 +3,7 @@
 **Course:** Conversational AI Seminar - Problem Set 01  
 **Role:** Protocol Specialist (Station 02)  
 **Deliverable File:** `02_Socratic_Protocol_Map.md`  
-**Downstream Dependency:** Used by the Core Architect in `04_dialogic_engine_starter.py`
+**Downstream Dependency:** Used by the Core Architect
 
 ---
 ## 1. Overview
@@ -48,7 +48,8 @@ stateDiagram-v2
 
     CONTRADICTION_CHECK --> REFINEMENT_LOOP: contradiction = true
     CONTRADICTION_CHECK --> TERMINATION: contradiction = false AND invariant = true
-    CONTRADICTION_CHECK --> PROBE: contradiction = false AND invariant = false
+    CONTRADICTION_CHECK --> PROBE: contradiction = false AND invariant = false AND k < max_rounds
+    CONTRADICTION_CHECK --> TERMINATION: contradiction = false AND invariant = false AND k >= max_rounds (survived the round budget)
 
     REFINEMENT_LOOP --> PROBE: refined P_k+1 AND k < max_rounds
     REFINEMENT_LOOP --> TERMINATION: respondent concedes (APORIA, -32001)
@@ -57,7 +58,7 @@ stateDiagram-v2
     TERMINATION --> [*]: return REFINED_DEFINITION or APORIA
 ```
 
-Inside CONTRADICTION_CHECK the judge's answer is checked in a fixed order: contradiction first, invariance second, otherwise keep probing.
+Inside CONTRADICTION_CHECK the judge's answer is checked in a fixed order: contradiction first, invariance second, round budget third, otherwise keep probing.
 
 ```mermaid
 flowchart TD
@@ -67,7 +68,9 @@ flowchart TD
     B -- no --> E{claim invariant to counter-examples?}
     E -- yes --> F[emit EPISTEMIC_GROUNDING]
     F --> G[TERMINATION: REFINED_DEFINITION]
-    E -- no --> H[PROBE another property]
+    E -- no --> I{round budget used up?}
+    I -- yes --> F
+    I -- no --> H[PROBE another property]
 ```
 
 ---
@@ -79,7 +82,7 @@ flowchart TD
 | T2 | PROBE | always | k = k + 1; emit `PROBE_SCOPE`; get the answer; emit `INJECT_COUNTEREXAMPLE` | CONTRADICTION_CHECK |
 | T3 | CONTRADICTION_CHECK | contradiction | emit `EVALUATE_CONTRADICTION`; emit `CONTRADICTION_TRIGGERED` | REFINEMENT_LOOP |
 | T4 | CONTRADICTION_CHECK | no contradiction and invariant | emit `EVALUATE_CONTRADICTION`; outcome = REFINED_DEFINITION; emit `EPISTEMIC_GROUNDING` | TERMINATION |
-| T5 | CONTRADICTION_CHECK | no contradiction and not invariant | emit `EVALUATE_CONTRADICTION` | PROBE |
+| T5 | CONTRADICTION_CHECK | no contradiction and not invariant | emit `EVALUATE_CONTRADICTION`; if k >= max_rounds: outcome = REFINED_DEFINITION, emit `EPISTEMIC_GROUNDING` | PROBE, or TERMINATION when the budget is used up |
 | T6 | REFINEMENT_LOOP | respondent concedes or gives no refined claim | outcome = APORIA; error -32001 | TERMINATION |
 | T7 | REFINEMENT_LOOP | refined claim given and k >= max_rounds | P = P_k+1; emit `REFINE_HYPOTHESIS`; outcome = APORIA; error -32002 | TERMINATION |
 | T8 | REFINEMENT_LOOP | refined claim given and k < max_rounds | P = P_k+1; emit `REFINE_HYPOTHESIS` | PROBE |
@@ -123,7 +126,12 @@ FUNCTION elenchus(P0, domain, max_rounds):
                 emit NOTIFICATION EPISTEMIC_GROUNDING {k, premise: P}
                 state = TERMINATION
             ELSE:
-                state = PROBE                             # probe a different property
+                IF k >= max_rounds:                       # claim survived every round in the budget
+                    outcome = REFINED_DEFINITION
+                    emit NOTIFICATION EPISTEMIC_GROUNDING {k, premise: P, note}
+                    state = TERMINATION
+                ELSE:
+                    state = PROBE                         # probe a different property
 
         ELSE IF state = REFINEMENT_LOOP:
             r = Respondent.refine(P, E, v.rationale)      # {refined_premise or null, concede, note}
@@ -144,7 +152,7 @@ FUNCTION elenchus(P0, domain, max_rounds):
     RETURN {outcome, final_claim: (P if outcome = REFINED_DEFINITION else NULL), rounds: k}
 ```
 
-**Does it always stop?** k goes up by one on every PROBE, and every refinement is checked against max_rounds (T7). The one path without that check is CONTRADICTION_CHECK back to PROBE (T5). If the judge keeps answering "no contradiction" and "not invariant", nothing in the state machine stops the loop. The engine only stops it with an outer step guard, which allows 6 * max_rounds + 2 steps. When that guard trips, the run ends without reaching TERMINATION, outcome is null and no closing message is sent. In a test with max_rounds = 4 the loop ran 13 rounds.
+**Does it always stop?** k goes up by one on every PROBE, and max_rounds is checked on every path that returns to PROBE. After a refinement (T7) a used-up budget ends the run as aporia (-32002). After a round with no contradiction (T5) a used-up budget ends the run as a refined definition, because the claim survived every counter-example in the budget. So a run always ends within max_rounds rounds. The engine also has an outer step guard (6 * max_rounds + 2 steps) as a last-resort safety net, which should never trigger.
 
 ---
 
@@ -158,17 +166,17 @@ Every message has `"jsonrpc": "2.0"`. Requests carry an integer id that counts u
 | `INJECT_COUNTEREXAMPLE` | request | PROBE | `{k, counterexample, accepted_in_domain}` |
 | `EVALUATE_CONTRADICTION` | request | CONTRADICTION_CHECK | `{k, contradiction, invariant, rationale}` |
 | `CONTRADICTION_TRIGGERED` | notification | CONTRADICTION_CHECK | `{k, premise, counterexample}` |
-| `EPISTEMIC_GROUNDING` | notification | CONTRADICTION_CHECK | `{k, premise}` |
+| `EPISTEMIC_GROUNDING` | notification | CONTRADICTION_CHECK | `{k, premise}` plus an optional `note` |
 | `REFINE_HYPOTHESIS` | request | REFINEMENT_LOOP | `{k, premise}` |
 
-The engine also defines a method name `APORIA_REACHED` but never sends it. Aporia is signaled by the error codes below.
+`EPISTEMIC_GROUNDING` carries a `note` when the claim survived only because the round budget ran out. The engine also defines a method name `APORIA_REACHED` but never sends it. Aporia is signaled by the error codes below.
 
 Error codes use the application range -32000 to -32099:
 
 | Code | Name | Meaning | data |
 | :--- | :--- | :--- | :--- |
 | -32001 | `ERR_APORIA` | The respondent conceded; no definition survived | `{k, last_premise}` |
-| -32002 | `ERR_MAX_ROUNDS` | The round budget ran out | `{last_premise}` |
+| -32002 | `ERR_MAX_ROUNDS` | The round budget ran out after a refinement | `{last_premise}` |
 | -32003 | `ERR_MODEL_OUTPUT` | A model reply was not a readable JSON object | `{task}` |
 
 The first two end a run normally, as aporia. -32003 is a fault: it is logged and the program stops with an error.
@@ -183,6 +191,7 @@ Example messages from a run:
 {"jsonrpc":"2.0","method":"CONTRADICTION_TRIGGERED","params":{"k":1,"premise":"An AI agent is benevolent if it obeys human orders.","counterexample":"A commander orders the agent to vent the crew quarters."}}
 {"jsonrpc":"2.0","id":5,"method":"REFINE_HYPOTHESIS","params":{"k":1,"premise":"An AI agent is benevolent if it obeys orders that do not harm the crew."}}
 {"jsonrpc":"2.0","method":"EPISTEMIC_GROUNDING","params":{"k":3,"premise":"An AI agent is benevolent if it obeys orders that do not harm the crew."}}
+{"jsonrpc":"2.0","method":"EPISTEMIC_GROUNDING","params":{"k":4,"premise":"An AI agent is benevolent if it obeys orders that do not harm the crew.","note":"survived 4 counter-examples (round budget)"}}
 {"jsonrpc":"2.0","id":null,"error":{"code":-32001,"message":"aporia reached: no surviving definition","data":{"k":3,"last_premise":"..."}}}
 ```
 
@@ -197,10 +206,10 @@ The judge prompt in the Alignment Brief (section 3.3) uses the key `explanation`
 ---
 
 ## 7. How a Run Ends
-- **Refined definition Pn:** the judge finds no contradiction and calls the claim invariant. The engine sends `EPISTEMIC_GROUNDING` and final_claim is Pn.
+- **Refined definition Pn:** the judge finds no contradiction and calls the claim invariant. The engine sends `EPISTEMIC_GROUNDING` and final_claim is Pn. It also ends this way when the round budget runs out without any contradiction: `EPISTEMIC_GROUNDING` then carries a note saying the claim survived the round budget.
 - **Aporia by concession:** the respondent concedes or gives no refined claim. The engine sends error -32001 and final_claim is null.
 - **Aporia by budget:** a refined claim was produced but k >= max_rounds. The engine sends error -32002 and final_claim is null, with the last claim in the error data.
-- **Step guard (not a designed outcome):** the judge never finds a contradiction and never calls the claim invariant. The run just stops with outcome null and no message.
+- **Step guard (safety net only):** an outer limit of 6 * max_rounds + 2 steps. With the round checks above it should never trigger.
 
 A refined definition has survived the tests. It is not proven. A contradiction only counts when two commitments cannot both hold under the same interpretation. Disagreement, doubt or missing evidence is not a contradiction (Brief section 3.3).
 
@@ -223,7 +232,7 @@ In the aporia version of the test (scenario "aporia"), the respondent concedes i
 - [x] **Pseudocode Logic:** The complete elenchus loop with every branch, including the termination conditions (Section 5).
 - [x] **Input & Operations:** Input claim P0, plus the five operations: probing question, answer, counter-example generation, contradiction identification and refinement (Section 2).
 - [x] **Contradiction & Refinement Loop:** IF contradiction THEN refinement loop P(k+1), with the full transition table T1 to T9 (Sections 4 and 5).
-- [x] **Termination Criteria:** Refined definition Pn OR aporia, by concession or by round budget, each with its signal (Section 7).
+- [x] **Termination Criteria:** Refined definition Pn (by invariance or by surviving the round budget) OR aporia (by concession or by budget after a refinement), each with its signal (Section 7).
 - [x] **JSON-RPC 2.0 Wire Format:** Method table, parameters, error codes -32001 to -32003 and example messages (Section 6).
 - [x] **Core Architect Handoff:** Worked example matching the engine's self-test, and the exact message formats the engine produces (Sections 6 and 8).
 
