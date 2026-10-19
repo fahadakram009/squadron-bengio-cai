@@ -31,7 +31,7 @@ Before transmitting your team's repository link on the course website submission
 - [ ] **Historical Archivist (`01_Lovelace_Inquiry_Brief.md`)** - Osaf Ahmad **:** 5-question Anti-Turing interrogation protocol & modern LLM evaluation against Lovelace's objection.
 - [x] **Protocol Specialist (`02_FST_and_Noisy_Protocol.md`)** - Madhu **:** `FSTDialogueManager` class implementation (5 required states & slot memory) + Noisy Channel Protocol (7-word limit + noise tokens).
 - [x] **Ethical Navigator (`03_Entropy_Hazard_Audit.md`)** - Janusz **:** FST stress tests documenting state breakage + Shannon information entropy & hazard audit under noise.
-- [ ] **Core Architect (`04_fst_noisy_simulator_starter.py`)** - Fahad **:** Integrated Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
+- [x] **Core Architect (`04_fst_noisy_simulator_starter.py`)** - Fahad **:** Integrated Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
 
 ---
 
@@ -41,7 +41,7 @@ Before transmitting your team's repository link on the course website submission
 # from the repo root (same .venv and .env as Mission 1)
 source .venv/bin/activate && pip install -r mission-02/requirements.txt
 cd mission-02
-python 04_fst_noisy_simulator_starter.py --selftest              # offline verification, 17 checks
+python 04_fst_noisy_simulator_starter.py --selftest              # offline verification, 21 checks
 python 04_fst_noisy_simulator_starter.py --mode stress           # FST brittleness benchmark, no LLM needed
 python 04_fst_noisy_simulator_starter.py --mode stress --strict  # portal-style catastrophic failure
 python 04_fst_noisy_simulator_starter.py                         # live: FST demo + stress tests + channel demo + 10-turn noisy interrogation
@@ -55,7 +55,7 @@ Each run writes `logs/<timestamp>-ps02-<mode>.jsonl` (FST state trace, every LLM
 
 | Station file | What the simulator takes from it | Fallback if absent |
 |---|---|---|
-| `01_Lovelace_Inquiry_Brief.md` | the five Anti-Turing questions (numbered or quoted lines under a heading containing "question") open the interrogation | built-in question list |
+| `01_Lovelace_Inquiry_Brief.md` (or `.pdf`) | the five Anti-Turing prompts (`Prompt: "..."` blocks, or numbered/quoted questions) open the interrogation | built-in question list |
 | `02_FST_and_Noisy_Protocol.md` | the five states, slot names and the 7-word / noise-token rule the code implements | - |
 | `03_Entropy_Hazard_Audit.md` | the five non-canonical utterances (quoted under a heading containing "stress") used for the brittleness benchmark | built-in stress set |
 

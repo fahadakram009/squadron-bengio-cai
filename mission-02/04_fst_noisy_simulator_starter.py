@@ -297,23 +297,26 @@ class FSTDialogueManager:
     def parse(self, text: str, state: str) -> tuple[str, str | None]:
         t = text.strip().lower()
         active = self._return_state if state == "FALLBACK" else state   # FALLBACK re-parses for the state it left
+        word = lambda key: re.search(rf"\b{re.escape(key)}\b", t)     # whole words only (Protocol finding P3/P4)
         if active == "INIT":
-            return ("GREET", None) if any(g in t for g in GREETINGS) else ("UNKNOWN", None)
+            return ("GREET", None) if any(word(g) for g in GREETINGS) else ("UNKNOWN", None)
         if active == "GREETING":
             for key, name in SECTORS.items():
-                if key in t:
+                if word(key):
                     return "SECTOR", name
             return "UNKNOWN", None
         if active == "COLLECT_SLOTS":
-            m = re.search(r"(?:warp|speed)\s*(\d)\b", t) or re.search(r"\b([1-9])\b", t)
-            if m and 1 <= int(m.group(1)) <= 9:
-                return "WARP", f"Warp {m.group(1)}"
-            return "UNKNOWN", None
+            m = re.search(r"\b(?:warp|speed)\s*(?:factor\s*)?([1-9])\b", t)
+            if not m and len(t.split()) <= 3:                            # a lone digit only in a short utterance (P4)
+                m = re.search(r"\b([1-9])\b", t)
+            return ("WARP", f"Warp {m.group(1)}") if m else ("UNKNOWN", None)
         if active == "CONFIRMATION":
-            if "alpha-7" in t or "alpha 7" in t or t.startswith("confirm") or t in ("yes", "y", "affirmative"):
+            if "alpha-7" in t or "alpha 7" in t:                          # the code itself is required (P5)
                 return "CONFIRM", CLEARANCE
-            if t in ("no", "n", "abort", "cancel", "negative"):
+            if word("no") or word("abort") or word("cancel") or word("negative"):
                 return "ABORT", None
+            if word("yes") or word("confirm") or word("affirmative"):
+                return "NEED_CODE", None                                  # agreement without the code: ask for it
             return "UNKNOWN", None
         return "UNKNOWN", None
 
@@ -323,13 +326,17 @@ class FSTDialogueManager:
         return out
 
     # -- delta / omega --------------------------------------------------------
+    # Every verbalisation (Gamma) is at most 7 words with one filler word the channel may overwrite, so the FST's own
+    # turns satisfy the channel constraint and slot values survive noise substitution (Protocol findings P1, P2).
+    EXPECTED = {"INIT": "greeting", "GREETING": "destination sector", "COLLECT_SLOTS": "warp factor", "CONFIRMATION": "clearance code"}
+
     def process_utterance(self, user_input: str) -> str:
         self.turn += 1
         frm = self.state
         if self.halted:
-            return self._record(frm, user_input, "HALTED", frm, f"State: {frm}. FST halted after {self.fallback_count} fallbacks. Reset required.")
+            return self._record(frm, user_input, "HALTED", frm, "FST halted. Please reset the channel.")
         if frm == "TERMINAL":
-            return self._record(frm, user_input, "DONE", frm, "State: TERMINAL. Course already locked. FST execution complete.")
+            return self._record(frm, user_input, "DONE", frm, "Course already locked. AURA out now.")
 
         intent, value = self.parse(user_input, frm)
         active = self._return_state if frm == "FALLBACK" else frm
@@ -339,40 +346,39 @@ class FSTDialogueManager:
             self.consecutive_fallbacks += 1
             if self.strict:
                 self.state, self.halted = "FALLBACK", True
-                return self._record(frm, user_input, intent, "FALLBACK",
-                                    f"TRANSITION ERROR in {active}: delta({active}, '{user_input.strip()[:30]}') undefined. Symbolic parser cannot recover without reset.")
+                return self._record(frm, user_input, intent, "FALLBACK", "Transition undefined. Parser halted. Reset required.")
             self._return_state = active
             self.state = "FALLBACK"
             if self.consecutive_fallbacks >= self.max_fallbacks:
                 self.halted = True
-                return self._record(frm, user_input, intent, "FALLBACK", f"State: FALLBACK. {self.consecutive_fallbacks} consecutive unparseable inputs. FST halted; reset required.")
-            expected = {"INIT": "a greeting (hello / AURA online)", "GREETING": "a destination sector (Orion, Alpha Centauri, Sol, Sirius)",
-                        "COLLECT_SLOTS": "a warp factor 1-9 (e.g. 'warp 5')", "CONFIRMATION": f"clearance code {CLEARANCE} or 'confirm'"}[active]
-            return self._record(frm, user_input, intent, "FALLBACK", f"State: FALLBACK ({self.consecutive_fallbacks}/{self.max_fallbacks}). Could not parse input in {active}. Expected {expected}.")
+                return self._record(frm, user_input, intent, "FALLBACK", "FST halted. Please reset the channel.")
+            return self._record(frm, user_input, intent, "FALLBACK", f"Unclear input. Please repeat the {self.EXPECTED[active]}.")
 
         # a parseable input: recover from FALLBACK transparently
         self.consecutive_fallbacks = 0
         if active == "INIT" and intent == "GREET":
             self.state = "GREETING"
-            return self._record(frm, user_input, intent, "GREETING", "AURA FST Online. State: GREETING. Welcome aboard USSE Noosphere. What is your destination sector?")
+            return self._record(frm, user_input, intent, "GREETING", "AURA online. Please state the destination sector.")
         if active == "GREETING" and intent == "SECTOR":
             self.slot_memory["sector"] = value
             self.state = "COLLECT_SLOTS"
-            return self._record(frm, user_input, intent, "COLLECT_SLOTS", f"Destination set to '{value}'. State: COLLECT_SLOTS. Please specify warp factor (1-9):", f"sector={value}")
+            return self._record(frm, user_input, intent, "COLLECT_SLOTS", f"Destination {value}. Please state warp factor.", f"sector={value}")
         if active == "COLLECT_SLOTS" and intent == "WARP":
             self.slot_memory["warp_factor"] = value
             self.state = "CONFIRMATION"
-            return self._record(frm, user_input, intent, "CONFIRMATION",
-                                f"Speed recorded: {value}. State: CONFIRMATION. Confirm course to {self.slot_memory['sector']} at {value} with clearance code {CLEARANCE}:", f"warp_factor={value}")
+            return self._record(frm, user_input, intent, "CONFIRMATION", f"Please confirm: {self.slot_memory['sector']}, {value}, {CLEARANCE}?", f"warp_factor={value}")
         if active == "CONFIRMATION" and intent == "CONFIRM":
             self.slot_memory["clearance_code"] = value
             self.state = "TERMINAL"
-            return self._record(frm, user_input, intent, "TERMINAL", "Course confirmed and locked. State: TERMINAL. FST execution complete.", f"clearance_code={value}")
+            return self._record(frm, user_input, intent, "TERMINAL", "Course locked. AURA signing off now.", f"clearance_code={value}")
+        if active == "CONFIRMATION" and intent == "NEED_CODE":
+            self.state = "CONFIRMATION"
+            return self._record(frm, user_input, intent, "CONFIRMATION", f"Please state clearance code {CLEARANCE} now.")
         if active == "CONFIRMATION" and intent == "ABORT":
             self.slot_memory.clear()
             self.state = "GREETING"
-            return self._record(frm, user_input, intent, "GREETING", "Course aborted. Slots cleared. State: GREETING. What is your destination sector?", "slots cleared")
-        return self._record(frm, user_input, intent, frm, f"State: {frm}. No transition for intent {intent}.")
+            return self._record(frm, user_input, intent, "GREETING", "Course aborted. Please state the destination sector.", "slots cleared")
+        return self._record(frm, user_input, intent, frm, "No transition. Please repeat the input.")
 
     def run(self, utterances: list[str]) -> list[str]:
         return [self.process_utterance(u) for u in utterances]
@@ -458,18 +464,29 @@ class NoisyChannelSimulator:
         self.persona = agent_persona
         self.rng = random.Random(seed)
 
+    FILLERS = {"please", "the", "a", "an", "now", "kindly"}
+
+    def encode_7(self, reply: str) -> str:
+        """Protocol Specialist's placement rule (02_FST_and_Noisy_Protocol.md section 7.1): truncate to 7 words; the noise
+        token overwrites the first filler word, otherwise it is appended, and only if the turn is already full does it
+        overwrite the last word. Slot values are never touched."""
+        words = reply.split()[: self.MAX_WORDS]
+        noise = self.rng.choice(self.NOISE_VOCAB)
+        for i, w in enumerate(words):
+            if re.sub(r"\W", "", w).lower() in self.FILLERS:
+                words[i] = re.sub(r"\w+", noise, w, count=1)
+                return " ".join(words)
+        if len(words) < self.MAX_WORDS:
+            return " ".join(words + [noise])
+        words[-1] = noise
+        return " ".join(words)
+
     def apply_channel_constraints(self, raw_response: str) -> str:
-        """Transmitter + channel: truncate to the word budget, then substitute one slot with a noise token."""
+        """Transmitter + channel: a valid 7-word transmission passes unchanged; anything else is re-encoded with encode_7."""
         words = raw_response.split()
         if self.has_noise(raw_response) and len(words) <= self.MAX_WORDS:
-            return " ".join(words)                                       # already a valid transmission
-        words = words[: self.MAX_WORDS]
-        noise = self.rng.choice(self.NOISE_VOCAB)
-        if len(words) < self.MAX_WORDS:
-            words.append(noise)                                           # spare slot: append
-        else:
-            words[self.rng.randrange(len(words))] = noise                 # full budget: substitute (erasure)
-        return " ".join(words)
+            return " ".join(words)
+        return self.encode_7(raw_response)
 
     @classmethod
     def has_noise(cls, text: str) -> bool:
@@ -534,19 +551,31 @@ RECEIVER_SYSTEM = ("You are the receiver at the far end of a noisy subspace chan
 
 
 def read_questions(path: str = "01_Lovelace_Inquiry_Brief.md", n: int = 10) -> tuple[list[str], str]:
-    """The Archivist's five Anti-Turing questions first (quoted or numbered lines under a heading mentioning 'question'),
-    topped up with the built-in list to n turns."""
+    """The Archivist's five Anti-Turing questions first, topped up with the built-in list to n turns.
+    Reads <path> or, failing that, the same stem as .pdf (via pypdf). Accepts 'Prompt: "..."' blocks (possibly
+    wrapped over lines) or numbered/quoted lines ending in '?'."""
     p = HERE / path
-    qs: list[str] = []
+    text, source = "", "built-in"
     if p.exists():
-        text = p.read_text(encoding="utf-8")
-        m = re.search(r"^##\s+[^\n]*question[^\n]*$(.*?)(?=^##\s|\Z)", text, re.S | re.M | re.I)
-        body = m.group(1) if m else text
-        for line in body.splitlines():
-            q = re.match(r"^\s*(?:\d+[.)]|[-*])\s*\**(?:Q\d+[:.]\s*)?\**\s*[\"“]?([^\"”\n]{12,300}\?)[\"”]?", line)
-            if q:
-                qs.append(q.group(1).strip())
-    source = path if qs else "built-in"
+        text, source = p.read_text(encoding="utf-8"), p.name
+    elif p.with_suffix(".pdf").exists():
+        try:
+            from pypdf import PdfReader
+            text = "\n".join(pg.extract_text() or "" for pg in PdfReader(str(p.with_suffix(".pdf"))).pages)
+            source = p.with_suffix(".pdf").name
+        except ImportError:
+            pass
+    qs: list[str] = []
+    if text:
+        flat = re.sub(r"[ \t]*\n[ \t]*", " ", text)                       # undo PDF line wrapping
+        qs = [re.sub(r"\s+", " ", q).strip() for q in re.findall(r"Prompt:\s*[\"“](.+?)[\"”]", flat)]
+        if not qs:
+            for line in text.splitlines():
+                q = re.match(r"^\s*(?:\d+[.)]|[-*])\s*\**(?:Q\d+[:.]\s*)?\**\s*[\"“]?([^\"”\n]{12,300}\?)[\"”]?", line)
+                if q:
+                    qs.append(q.group(1).strip())
+    if not qs:
+        source = "built-in"
     for q in DEFAULT_QUESTIONS:
         if len(qs) >= n:
             break
@@ -661,7 +690,7 @@ def self_test() -> bool:
                ("three slots filled", set(fst.slot_memory) == {"sector", "warp_factor", "clearance_code"}),
                ("state path INIT->GREETING->COLLECT_SLOTS->CONFIRMATION->TERMINAL", [t["to"] for t in fst.trace] == ["GREETING", "COLLECT_SLOTS", "CONFIRMATION", "TERMINAL"]),
                ("deterministic output entropy == 2 bits for 4 distinct states", fst.output_entropy() == 2.0)]
-    fst = FSTDialogueManager(); fst.run(["Hello", "take me somewhere nice", "Orion Arm", "warp 3", "ALPHA-7"])
+    fst = FSTDialogueManager(); fst.run(["Hello", "take me somewhere nice", "Orion Arm", "warp 3", "code ALPHA-7"])
     checks += [("non-canonical input -> FALLBACK then recovers", fst.state == "TERMINAL" and fst.fallback_count == 1 and "FALLBACK" in [t["to"] for t in fst.trace])]
     fst = FSTDialogueManager(); fst.run(["Hello", "x", "y", "z", "Orion Arm"])
     checks += [("3 consecutive fallbacks halt the FST", fst.halted and fst.state == "FALLBACK")]
@@ -669,6 +698,11 @@ def self_test() -> bool:
     checks += [("strict mode fails catastrophically (portal behaviour)", fst.halted and "sector" not in fst.slot_memory)]
     fst = FSTDialogueManager(); fst.run(["Hello", "Sol", "warp 2", "no"])
     checks += [("abort in CONFIRMATION clears slots -> GREETING", fst.state == "GREETING" and fst.slot_memory == {})]
+    fst = FSTDialogueManager(); outs = fst.run(["Is this ship working?", "Hello", "Check the console first", "Orion Arm", "I have 2 questions", "warp 2", "yes", "confirm nothing, wrong course", "ALPHA-7", "again", "x", "y", "z"])
+    checks += [("P3/P4: substrings 'hi'/'sol'/lone digit no longer match", [t["intent"] for t in fst.trace[:6]] == ["UNKNOWN", "GREET", "UNKNOWN", "SECTOR", "UNKNOWN", "WARP"]),
+               ("P5: 'yes' without the code does not store clearance", fst.trace[6]["intent"] == "NEED_CODE" and fst.trace[7]["intent"] == "NEED_CODE" and fst.trace[8]["to"] == "TERMINAL"),
+               ("P1: every FST verbalisation is <= 7 words", all(word_count(o) <= 7 for o in outs)),
+               ("P2: encode_7 keeps slot values", "Orion Arm" in NoisyChannelSimulator(seed=3).encode_7("Please confirm: Orion Arm, Warp 7, ALPHA-7?") and "ALPHA-7" in NoisyChannelSimulator(seed=3).encode_7("Please confirm: Orion Arm, Warp 7, ALPHA-7?"))]
 
     ch = NoisyChannelSimulator(seed=1)
     outs = [ch.apply_channel_constraints(s) for s in ("I am operating normally under signal degradation here", "ok", "", "Quantum fine", "one two three four five six seven eight")]
@@ -729,8 +763,11 @@ def main(argv: list[str] | None = None) -> int:
         if a.mode in ("fst", "all"):
             banner("FST DIALOGUE MANAGER - canonical session")
             fst = FSTDialogueManager(strict=a.strict)
+            ch = NoisyChannelSimulator(seed=a.seed)
             for u in CANONICAL_SESSION:
-                print(f"  USER> {u}\n  AURA> {fst.process_utterance(u)}")
+                reply = fst.process_utterance(u); tx = ch.encode_7(reply)
+                fst.trace[-1]["transmission"] = tx
+                print(f"  USER> {u}\n  AURA> {reply}   [{fst.state}]\n  >>>>> {tx}")
             for t in fst.trace:
                 log.event("fst", f"{t['from']} -> {t['to']}", t.get("slot_update") or "", who=t["intent"])
             results["fst"] = {"final_state": fst.state, "slot_memory": fst.slot_memory, "output_entropy_bits": fst.output_entropy(), "trace": fst.trace}
