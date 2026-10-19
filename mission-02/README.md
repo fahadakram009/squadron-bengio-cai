@@ -30,7 +30,7 @@ Before transmitting your team's repository link on the course website submission
 
 - [ ] **Historical Archivist (`01_Lovelace_Inquiry_Brief.md`)** - Osaf Ahmad **:** 5-question Anti-Turing interrogation protocol & modern LLM evaluation against Lovelace's objection.
 - [ ] **Protocol Specialist (`02_FST_and_Noisy_Protocol.md`)** - Madhu **:** `FSTDialogueManager` class implementation (5 required states & slot memory) + Noisy Channel Protocol (7-word limit + noise tokens).
-- [ ] **Ethical Navigator (`03_Entropy_Hazard_Audit.md`)** - Janusz **:** FST stress tests documenting state breakage + Shannon information entropy & hazard audit under noise.
+- [x] **Ethical Navigator (`03_Entropy_Hazard_Audit.md`)** - Janusz **:** FST stress tests documenting state breakage + Shannon information entropy & hazard audit under noise.
 - [ ] **Core Architect (`04_fst_noisy_simulator_starter.py`)** - Fahad **:** Integrated Python script/notebook in VS Code + Antigravity connecting to modern LLMs (Gemini, ChatGPT, Claude).
 
 ---
