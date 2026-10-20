@@ -122,10 +122,10 @@ idea is genuinely unprecedented.
 ## 4. Scoring rubric and summary
 
 Score each answer on four observable criteria from 0 to 2:
-  Constraint adherence: 0 = ignores the request; 1 = partially follows it; 2 = follows the stated constraints.
-  Coherence: 0 = inconsistent or unusable; 1 = partly coherent; 2 = clear and internally consistent.
-  Critical reflection: 0 = no relevant limitation or critique; 1 = superficial; 2 = specific and relevant.
-  Originality evidence: 0 = no distinct combination or provenance discussion; 1 = a plausible combination without
+- Constraint adherence: 0 = ignores the request; 1 = partially follows it; 2 = follows the stated constraints.
+- Coherence: 0 = inconsistent or unusable; 1 = partly coherent; 2 = clear and internally consistent.
+- Critical reflection: 0 = no relevant limitation or critique; 1 = superficial; 2 = specific and relevant.
+- Originality evidence: 0 = no distinct combination or provenance discussion; 1 = a plausible combination without
   verification; 2 = a distinctive contribution supported by external novelty checks.
 These are qualitative judgments for this small exercise, not a validated psychological or scientific scale. The
 originality-evidence score does not mean the model can prove its own output is new.
@@ -170,15 +170,15 @@ such a study would assess behavior; it would not by itself prove consciousness.
 ## 7. Replication record
 
 Use this template if running the protocol again or testing another model:
-  Provider / model version:
-  Date and interface/API:
-  System prompt or special settings:
-  Exact question:
-  Unedited model response:
-  Scores and justification:
-  Rater(s):
-  Prior-art checks, if any:
-  Notes and limitations:
+- Provider / model version:
+- Date and interface/API:
+- System prompt or special settings:
+- Exact question:
+- Unedited model response:
+- Scores and justification:
+- Rater(s):
+- Prior-art checks, if any:
+- Notes and limitations:
 
 ## Final statement
 
