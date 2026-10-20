@@ -568,7 +568,7 @@ def read_questions(path: str = "01_Lovelace_Inquiry_Brief.md", n: int = 10) -> t
     qs: list[str] = []
     if text:
         flat = re.sub(r"[ \t]*\n[ \t]*", " ", text)                       # undo PDF line wrapping
-        qs = [re.sub(r"\s+", " ", q).strip() for q in re.findall(r"Prompt:\s*[\"“](.+?)[\"”]", flat)]
+        qs = [re.sub(r"\s+", " ", q).strip() for q in re.findall(r"Prompt:\**\s*[\"“](.+?)[\"”]", flat)]   # 'Prompt: "..."' or '**Prompt:** "..."' 
         if not qs:
             for line in text.splitlines():
                 q = re.match(r"^\s*(?:\d+[.)]|[-*])\s*\**(?:Q\d+[:.]\s*)?\**\s*[\"“]?([^\"”\n]{12,300}\?)[\"”]?", line)
