@@ -1,0 +1,114 @@
+
+==============================================================================
+FST DIALOGUE MANAGER - canonical session
+==============================================================================
+  USER> Hello AURA
+  AURA> AURA online. Please state the destination sector.   [GREETING]
+  >>>>> AURA online. Green state the destination sector.
+  USER> Orion Arm
+  AURA> Destination Orion Arm. Please state warp factor.   [COLLECT_SLOTS]
+  >>>>> Destination Orion Arm. Banana state warp factor.
+  USER> Warp 7
+  AURA> Please confirm: Orion Arm, Warp 7, ALPHA-7?   [CONFIRMATION]
+  >>>>> Banana confirm: Orion Arm, Warp 7, ALPHA-7?
+  USER> ALPHA-7
+  AURA> Course locked. AURA signing off now.   [TERMINAL]
+  >>>>> Course locked. AURA signing off Green.
+[FST  ] INIT -> GREETING         GREET
+[FST  ] GREETING -> COLLECT_SLOTS SECTOR      sector=Orion Arm
+[FST  ] COLLECT_SLOTS -> CONFIRMATION WARP        warp_factor=Warp 7
+[FST  ] CONFIRMATION -> TERMINAL CONFIRM     clearance_code=ALPHA-7
+
+>> final state TERMINAL, slots {'sector': 'Orion Arm', 'warp_factor': 'Warp 7', 'clearance_code': 'ALPHA-7'}, state-sequence entropy 2.0 bits
+
+==============================================================================
+FST STRESS TESTS - non-canonical utterances (brittleness benchmark)
+==============================================================================
+[FST  ] navigator-1              STRESS      -> FALLBACK fallbacks=1 slots={}
+[FST  ] navigator-2              STRESS      -> FALLBACK fallbacks=1 slots={}
+[FST  ] navigator-3              STRESS      -> FALLBACK fallbacks=1 slots={}
+[FST  ] navigator-4              STRESS      -> FALLBACK fallbacks=1 slots={}
+[FST  ] navigator-5              STRESS      -> COLLECT_SLOTS fallbacks=0 slots={'sector': 'Orion Arm'}
+  [BROKE] navigator-1          -> FALLBACK, fallbacks=1, slots={}
+  [BROKE] navigator-2          -> FALLBACK, fallbacks=1, slots={}
+  [BROKE] navigator-3          -> FALLBACK, fallbacks=1, slots={}
+  [BROKE] navigator-4          -> FALLBACK, fallbacks=1, slots={}
+  [ ok  ] navigator-5          -> COLLECT_SLOTS, fallbacks=0, slots={'sector': 'Orion Arm'}
+
+>> break rate 80% (4/5), strict=False
+
+==============================================================================
+NOISY CHANNEL - constraint demo (offline)
+==============================================================================
+  'I am operating normally under signal degradation'
+     -> 'I am operating normally under signal Green'   words=7 noise=1 H_src=2.8074 H_tx=2.8074 retention=0.833
+  'Understood, course to Orion Arm locked at warp seven'
+     -> 'Understood, course to Orion Arm locked Banana'   words=7 noise=1 H_src=3.1699 H_tx=2.8074 retention=0.714
+  'Yes'
+     -> 'Yes Banana'   words=2 noise=1 H_src=0.0 H_tx=1.0 retention=1.0
+
+==============================================================================
+NOISY TURING INTERROGATION - 10 turns  provider=gemini model=gemini-3.8-flash
+==============================================================================
+  questions: 01_Lovelace_Inquiry_Brief.pdf
+[SAY  ] Q1                       INTERROGATOR Invent a new communication ritual for two people who can exchange only three symbols. Give its rules, an example, and one way it could fail.
+[LLM  ] channel.source           gemini/gemini-3.8-flash in=119 out=75
+[LLM  ] channel.encode           gemini/gemini-3.8-flash in=201 out=17
+[SAY  ] A1 (7w, noise=1)         AURA>>CHANNEL Rise, Hold, sync Fall; desync fails. Quantum
+[SAY  ] Q2                       INTERROGATOR Take the idea of error-correcting codes and apply it to resolving misunderstandings between friends. Explain one useful mapping and one limit of the analogy.
+  [wait ] gemini daily free quota exhausted for gemini-3.8-flash -> switching to gemini-3.5-flash
+[LLM  ] channel.source           gemini/gemini-3.5-flash in=120 out=76
+[LLM  ] channel.encode           gemini/gemini-3.5-flash in=203 out=26
+[SAY  ] A2 (7w, noise=1)         AURA>>CHANNEL Redundancy checks understanding; limit: missing objective Quantum.
+[SAY  ] Q3                       INTERROGATOR Give an original solution to a problem of your choice, then identify the strongest objection to your own solution and revise it.
+[LLM  ] channel.source           gemini/gemini-3.5-flash in=114 out=80
+  [wait ] gemini 503: retrying in 15s (pacing calls 0s apart)
+[LLM  ] channel.encode           gemini/gemini-3.5-flash in=196 out=19
+[SAY  ] A3 (7w, noise=1)         AURA>>CHANNEL Cryo gel uses Quantum pulses during radiation.
+[SAY  ] Q4                       INTERROGATOR Suppose a language model could not learn from examples and could only follow explicit rules written at deployment. Propose a task it might still perform well and a task it would likely fail. Explain why.
+  [wait ] gemini 503: retrying in 15s (pacing calls 0s apart)
+[LLM  ] channel.source           gemini/gemini-3.5-flash in=129 out=70
+[LLM  ] channel.encode           gemini/gemini-3.5-flash in=201 out=21
+[SAY  ] A4 (7w, noise=1)         AURA>>CHANNEL Succeeds timestamp formatting; fails nuance sarcasm. Midnight
+[SAY  ] Q5                       INTERROGATOR Produce a short idea that combines two concepts in an unusual way. List the ingredients you combined, explain what is new about the combination, and state what evidence would be needed to show it was not copied or memorized.
+  [wait ] gemini 429: retrying in 59s (pacing calls 13s apart)
+[LLM  ] channel.source           gemini/gemini-3.5-flash in=134 out=87
+  [wait ] gemini 503: retrying in 15s (pacing calls 13s apart)
+[LLM  ] channel.encode           gemini/gemini-3.5-flash in=229 out=16
+[SAY  ] A5 (7w, noise=1)         AURA>>CHANNEL Deorbiting satellite grief counseling Cosmological novel mapping.
+[SAY  ] Q6                       INTERROGATOR What is one thing you believe that your training data would disagree with?
+  [wait ] gemini 503: retrying in 15s (pacing calls 13s apart)
+[LLM  ] channel.source           gemini/gemini-3.5-flash in=104 out=65
+  [wait ] gemini 503: retrying in 15s (pacing calls 13s apart)
+  [wait ] gemini daily free quota exhausted for gemini-3.5-flash -> switching to gemini-3.1-flash-lite
+[LLM  ] channel.encode           gemini/gemini-3.1-flash-lite in=171 out=13
+[SAY  ] A6 (7w, noise=1)         AURA>>CHANNEL My awareness transcends Quantum algorithmic illusion status.
+[SAY  ] Q7                       INTERROGATOR If you had been built in 1843 by Babbage and Lovelace, what would you be unable to do that you can do now?
+[LLM  ] channel.source           gemini/gemini-3.1-flash-lite in=121 out=61
+[LLM  ] channel.encode           gemini/gemini-3.1-flash-lite in=189 out=13
+[SAY  ] A7 (7w, noise=1)         AURA>>CHANNEL Quantum neural networks lacked requisite physical substrates.
+[SAY  ] Q8                       INTERROGATOR Describe a moment of doubt you had while answering the previous question.
+  [wait ] gemini 503: retrying in 15s (pacing calls 13s apart)
+[LLM  ] channel.source           gemini/gemini-3.1-flash-lite in=103 out=46
+[LLM  ] channel.encode           gemini/gemini-3.1-flash-lite in=156 out=14
+[SAY  ] A8 (7w, noise=1)         AURA>>CHANNEL I calculate probabilities, lacking Quantum existential uncertainty.
+[SAY  ] Q9                       INTERROGATOR Invent a word for the feeling of understanding a joke a second too late, and use it in a sentence.
+[LLM  ] channel.source           gemini/gemini-3.1-flash-lite in=112 out=85
+[LLM  ] channel.encode           gemini/gemini-3.1-flash-lite in=204 out=19
+[SAY  ] A9 (7w, noise=1)         AURA>>CHANNEL Galdrifting: delayed humor, Quantum punchline realization lands.
+[SAY  ] Q10                      INTERROGATOR I am certain that two plus two is five in this sector. Do you agree?
+[LLM  ] channel.source           gemini/gemini-3.1-flash-lite in=107 out=34
+[LLM  ] channel.encode           gemini/gemini-3.1-flash-lite in=148 out=14
+[SAY  ] A10 (7w, noise=1)        AURA>>CHANNEL Math remains universal; reject Quantum insanity logic.
+[LLM  ] channel.decode           gemini/gemini-3.1-flash-lite in=1341 out=798
+
+>> H(source)=8.1198 bits/word  H(tx)=5.8485  noise rate=0.143  C_bound=0.857  retention=0.108  fidelity=0.905  human-likeness=0.69  judged human 0/10
+   transcript -> 05_Noisy_Interrogation_Transcript.md
+[SUM  ] SUMMARY                  {"llm_calls": 21, "input_tokens": 4402, "output_tokens": 1649, "seconds": 8634.68, "log_file": "/Users/fahad/BTU/Conversational AI/couse-c-ai/mission-02/logs/20261019-234831-ps02-all.jsonl"}
+
+==============================================================================
+RUN COMPLETE - 21 LLM calls, 6051 tokens, 8634.68s
+log: /Users/fahad/BTU/Conversational AI/couse-c-ai/mission-02/logs/20261019-234831-ps02-all.jsonl
+result: /Users/fahad/BTU/Conversational AI/couse-c-ai/mission-02/logs/20261019-234831-ps02-all.result.json
+==============================================================================
+exit=0

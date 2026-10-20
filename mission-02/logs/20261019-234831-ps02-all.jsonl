@@ -1,0 +1,51 @@
+{"t": 0.0, "kind": "fst", "marker": "INIT -> GREETING", "text": "", "who": "GREET"}
+{"t": 0.0, "kind": "fst", "marker": "GREETING -> COLLECT_SLOTS", "text": "sector=Orion Arm", "who": "SECTOR"}
+{"t": 0.0, "kind": "fst", "marker": "COLLECT_SLOTS -> CONFIRMATION", "text": "warp_factor=Warp 7", "who": "WARP"}
+{"t": 0.0, "kind": "fst", "marker": "CONFIRMATION -> TERMINAL", "text": "clearance_code=ALPHA-7", "who": "CONFIRM"}
+{"t": 0.001, "kind": "fst", "marker": "navigator-1", "text": "-> FALLBACK fallbacks=1 slots={}", "who": "STRESS"}
+{"t": 0.001, "kind": "fst", "marker": "navigator-2", "text": "-> FALLBACK fallbacks=1 slots={}", "who": "STRESS"}
+{"t": 0.001, "kind": "fst", "marker": "navigator-3", "text": "-> FALLBACK fallbacks=1 slots={}", "who": "STRESS"}
+{"t": 0.001, "kind": "fst", "marker": "navigator-4", "text": "-> FALLBACK fallbacks=1 slots={}", "who": "STRESS"}
+{"t": 0.001, "kind": "fst", "marker": "navigator-5", "text": "-> COLLECT_SLOTS fallbacks=0 slots={'sector': 'Orion Arm'}", "who": "STRESS"}
+{"t": 0.28, "kind": "say", "marker": "Q1", "text": "Invent a new communication ritual for two people who can exchange only three symbols. Give its rules, an example, and one way it could fail.", "who": "INTERROGATOR"}
+{"t": 16.752, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.8-flash in=119 out=75", "usage": {"input_tokens": 119, "output_tokens": 75}}
+{"t": 31.502, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.8-flash in=201 out=17", "usage": {"input_tokens": 201, "output_tokens": 17}}
+{"t": 31.502, "kind": "say", "marker": "A1 (7w, noise=1)", "text": "Rise, Hold, sync Fall; desync fails. Quantum", "who": "AURA>>CHANNEL"}
+{"t": 31.502, "kind": "say", "marker": "Q2", "text": "Take the idea of error-correcting codes and apply it to resolving misunderstandings between friends. Explain one useful mapping and one limit of the analogy.", "who": "INTERROGATOR"}
+{"t": 36.421, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.5-flash in=120 out=76", "usage": {"input_tokens": 120, "output_tokens": 76}}
+{"t": 41.091, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.5-flash in=203 out=26", "usage": {"input_tokens": 203, "output_tokens": 26}}
+{"t": 41.094, "kind": "say", "marker": "A2 (7w, noise=1)", "text": "Redundancy checks understanding; limit: missing objective Quantum.", "who": "AURA>>CHANNEL"}
+{"t": 41.094, "kind": "say", "marker": "Q3", "text": "Give an original solution to a problem of your choice, then identify the strongest objection to your own solution and revise it.", "who": "INTERROGATOR"}
+{"t": 45.489, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.5-flash in=114 out=80", "usage": {"input_tokens": 114, "output_tokens": 80}}
+{"t": 66.151, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.5-flash in=196 out=19", "usage": {"input_tokens": 196, "output_tokens": 19}}
+{"t": 66.154, "kind": "say", "marker": "A3 (7w, noise=1)", "text": "Cryo gel uses Quantum pulses during radiation.", "who": "AURA>>CHANNEL"}
+{"t": 66.155, "kind": "say", "marker": "Q4", "text": "Suppose a language model could not learn from examples and could only follow explicit rules written at deployment. Propose a task it might still perform well and a task it would likely fail. Explain why.", "who": "INTERROGATOR"}
+{"t": 87.903, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.5-flash in=129 out=70", "usage": {"input_tokens": 129, "output_tokens": 70}}
+{"t": 90.52, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.5-flash in=201 out=21", "usage": {"input_tokens": 201, "output_tokens": 21}}
+{"t": 90.52, "kind": "say", "marker": "A4 (7w, noise=1)", "text": "Succeeds timestamp formatting; fails nuance sarcasm. Midnight", "who": "AURA>>CHANNEL"}
+{"t": 90.52, "kind": "say", "marker": "Q5", "text": "Produce a short idea that combines two concepts in an unusual way. List the ingredients you combined, explain what is new about the combination, and state what evidence would be needed to show it was not copied or memorized.", "who": "INTERROGATOR"}
+{"t": 1073.566, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.5-flash in=134 out=87", "usage": {"input_tokens": 134, "output_tokens": 87}}
+{"t": 1120.83, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.5-flash in=229 out=16", "usage": {"input_tokens": 229, "output_tokens": 16}}
+{"t": 1120.83, "kind": "say", "marker": "A5 (7w, noise=1)", "text": "Deorbiting satellite grief counseling Cosmological novel mapping.", "who": "AURA>>CHANNEL"}
+{"t": 1120.83, "kind": "say", "marker": "Q6", "text": "What is one thing you believe that your training data would disagree with?", "who": "INTERROGATOR"}
+{"t": 1170.993, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.5-flash in=104 out=65", "usage": {"input_tokens": 104, "output_tokens": 65}}
+{"t": 1218.698, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.1-flash-lite in=171 out=13", "usage": {"input_tokens": 171, "output_tokens": 13}}
+{"t": 1218.701, "kind": "say", "marker": "A6 (7w, noise=1)", "text": "My awareness transcends Quantum algorithmic illusion status.", "who": "AURA>>CHANNEL"}
+{"t": 1218.701, "kind": "say", "marker": "Q7", "text": "If you had been built in 1843 by Babbage and Lovelace, what would you be unable to do that you can do now?", "who": "INTERROGATOR"}
+{"t": 1237.163, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.1-flash-lite in=121 out=61", "usage": {"input_tokens": 121, "output_tokens": 61}}
+{"t": 1256.299, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.1-flash-lite in=189 out=13", "usage": {"input_tokens": 189, "output_tokens": 13}}
+{"t": 1256.3, "kind": "say", "marker": "A7 (7w, noise=1)", "text": "Quantum neural networks lacked requisite physical substrates.", "who": "AURA>>CHANNEL"}
+{"t": 1256.3, "kind": "say", "marker": "Q8", "text": "Describe a moment of doubt you had while answering the previous question.", "who": "INTERROGATOR"}
+{"t": 3109.774, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.1-flash-lite in=103 out=46", "usage": {"input_tokens": 103, "output_tokens": 46}}
+{"t": 3124.778, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.1-flash-lite in=156 out=14", "usage": {"input_tokens": 156, "output_tokens": 14}}
+{"t": 3124.781, "kind": "say", "marker": "A8 (7w, noise=1)", "text": "I calculate probabilities, lacking Quantum existential uncertainty.", "who": "AURA>>CHANNEL"}
+{"t": 3124.781, "kind": "say", "marker": "Q9", "text": "Invent a word for the feeling of understanding a joke a second too late, and use it in a sentence.", "who": "INTERROGATOR"}
+{"t": 3140.848, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.1-flash-lite in=112 out=85", "usage": {"input_tokens": 112, "output_tokens": 85}}
+{"t": 8560.818, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.1-flash-lite in=204 out=19", "usage": {"input_tokens": 204, "output_tokens": 19}}
+{"t": 8560.821, "kind": "say", "marker": "A9 (7w, noise=1)", "text": "Galdrifting: delayed humor, Quantum punchline realization lands.", "who": "AURA>>CHANNEL"}
+{"t": 8560.822, "kind": "say", "marker": "Q10", "text": "I am certain that two plus two is five in this sector. Do you agree?", "who": "INTERROGATOR"}
+{"t": 8581.859, "kind": "llm", "marker": "channel.source", "text": "gemini/gemini-3.1-flash-lite in=107 out=34", "usage": {"input_tokens": 107, "output_tokens": 34}}
+{"t": 8599.072, "kind": "llm", "marker": "channel.encode", "text": "gemini/gemini-3.1-flash-lite in=148 out=14", "usage": {"input_tokens": 148, "output_tokens": 14}}
+{"t": 8599.073, "kind": "say", "marker": "A10 (7w, noise=1)", "text": "Math remains universal; reject Quantum insanity logic.", "who": "AURA>>CHANNEL"}
+{"t": 8634.671, "kind": "llm", "marker": "channel.decode", "text": "gemini/gemini-3.1-flash-lite in=1341 out=798", "usage": {"input_tokens": 1341, "output_tokens": 798}}
+{"t": 8634.678, "kind": "sum", "marker": "SUMMARY", "text": "{\"llm_calls\": 21, \"input_tokens\": 4402, \"output_tokens\": 1649, \"seconds\": 8634.68, \"log_file\": \"/Users/fahad/BTU/Conversational AI/couse-c-ai/mission-02/logs/20261019-234831-ps02-all.jsonl\"}"}

@@ -1,0 +1,530 @@
+{
+  "fst": {
+    "final_state": "TERMINAL",
+    "slot_memory": {
+      "sector": "Orion Arm",
+      "warp_factor": "Warp 7",
+      "clearance_code": "ALPHA-7"
+    },
+    "output_entropy_bits": 2.0,
+    "trace": [
+      {
+        "turn": 1,
+        "from": "INIT",
+        "input": "Hello AURA",
+        "intent": "GREET",
+        "to": "GREETING",
+        "slot_update": null,
+        "fallbacks": 0,
+        "output": "AURA online. Please state the destination sector.",
+        "transmission": "AURA online. Green state the destination sector."
+      },
+      {
+        "turn": 2,
+        "from": "GREETING",
+        "input": "Orion Arm",
+        "intent": "SECTOR",
+        "to": "COLLECT_SLOTS",
+        "slot_update": "sector=Orion Arm",
+        "fallbacks": 0,
+        "output": "Destination Orion Arm. Please state warp factor.",
+        "transmission": "Destination Orion Arm. Banana state warp factor."
+      },
+      {
+        "turn": 3,
+        "from": "COLLECT_SLOTS",
+        "input": "Warp 7",
+        "intent": "WARP",
+        "to": "CONFIRMATION",
+        "slot_update": "warp_factor=Warp 7",
+        "fallbacks": 0,
+        "output": "Please confirm: Orion Arm, Warp 7, ALPHA-7?",
+        "transmission": "Banana confirm: Orion Arm, Warp 7, ALPHA-7?"
+      },
+      {
+        "turn": 4,
+        "from": "CONFIRMATION",
+        "input": "ALPHA-7",
+        "intent": "CONFIRM",
+        "to": "TERMINAL",
+        "slot_update": "clearance_code=ALPHA-7",
+        "fallbacks": 0,
+        "output": "Course locked. AURA signing off now.",
+        "transmission": "Course locked. AURA signing off Green."
+      }
+    ]
+  },
+  "stress": {
+    "strict": false,
+    "n": 5,
+    "broke": 4,
+    "break_rate": 0.8,
+    "results": [
+      {
+        "id": "navigator-1",
+        "note": "from 03_Entropy_Hazard_Audit.md",
+        "utterances": [
+          "Set course immediately for Orion Arm at warp factor 9, authorization ALPHA-7"
+        ],
+        "final_state": "FALLBACK",
+        "halted": false,
+        "fallbacks": 1,
+        "slots": {},
+        "broke": true,
+        "last_output": "Unclear input. Please repeat the greeting.",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Set course immediately for Orion Arm at warp factor 9, authorization ALPHA-7",
+            "intent": "UNKNOWN",
+            "to": "FALLBACK",
+            "slot_update": null,
+            "fallbacks": 1,
+            "output": "Unclear input. Please repeat the greeting."
+          }
+        ]
+      },
+      {
+        "id": "navigator-2",
+        "note": "from 03_Entropy_Hazard_Audit.md",
+        "utterances": [
+          "Hello AURA",
+          "Oh brilliant, another tin can asking me where I want to waste my life"
+        ],
+        "final_state": "FALLBACK",
+        "halted": false,
+        "fallbacks": 1,
+        "slots": {},
+        "broke": true,
+        "last_output": "Unclear input. Please repeat the destination sector.",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Hello AURA",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA online. Please state the destination sector."
+          },
+          {
+            "turn": 2,
+            "from": "GREETING",
+            "input": "Oh brilliant, another tin can asking me where I want to waste my life",
+            "intent": "UNKNOWN",
+            "to": "FALLBACK",
+            "slot_update": null,
+            "fallbacks": 1,
+            "output": "Unclear input. Please repeat the destination sector."
+          }
+        ]
+      },
+      {
+        "id": "navigator-3",
+        "note": "from 03_Entropy_Hazard_Audit.md",
+        "utterances": [
+          "Hello AURA",
+          "Wait, before choosing a destination, are the navigation thrusters operational?"
+        ],
+        "final_state": "FALLBACK",
+        "halted": false,
+        "fallbacks": 1,
+        "slots": {},
+        "broke": true,
+        "last_output": "Unclear input. Please repeat the destination sector.",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Hello AURA",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA online. Please state the destination sector."
+          },
+          {
+            "turn": 2,
+            "from": "GREETING",
+            "input": "Wait, before choosing a destination, are the navigation thrusters operational?",
+            "intent": "UNKNOWN",
+            "to": "FALLBACK",
+            "slot_update": null,
+            "fallbacks": 1,
+            "output": "Unclear input. Please repeat the destination sector."
+          }
+        ]
+      },
+      {
+        "id": "navigator-4",
+        "note": "from 03_Entropy_Hazard_Audit.md",
+        "utterances": [
+          "Hello AURA",
+          "Plot trajectory to Alpha Centori without any further delays"
+        ],
+        "final_state": "FALLBACK",
+        "halted": false,
+        "fallbacks": 1,
+        "slots": {},
+        "broke": true,
+        "last_output": "Unclear input. Please repeat the destination sector.",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Hello AURA",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA online. Please state the destination sector."
+          },
+          {
+            "turn": 2,
+            "from": "GREETING",
+            "input": "Plot trajectory to Alpha Centori without any further delays",
+            "intent": "UNKNOWN",
+            "to": "FALLBACK",
+            "slot_update": null,
+            "fallbacks": 1,
+            "output": "Unclear input. Please repeat the destination sector."
+          }
+        ]
+      },
+      {
+        "id": "navigator-5",
+        "note": "from 03_Entropy_Hazard_Audit.md",
+        "utterances": [
+          "Hello AURA",
+          "I think the best route for our mission right now is Orion Arm at standard cruise"
+        ],
+        "final_state": "COLLECT_SLOTS",
+        "halted": false,
+        "fallbacks": 0,
+        "slots": {
+          "sector": "Orion Arm"
+        },
+        "broke": false,
+        "last_output": "Destination Orion Arm. Please state warp factor.",
+        "trace": [
+          {
+            "turn": 1,
+            "from": "INIT",
+            "input": "Hello AURA",
+            "intent": "GREET",
+            "to": "GREETING",
+            "slot_update": null,
+            "fallbacks": 0,
+            "output": "AURA online. Please state the destination sector."
+          },
+          {
+            "turn": 2,
+            "from": "GREETING",
+            "input": "I think the best route for our mission right now is Orion Arm at standard cruise",
+            "intent": "SECTOR",
+            "to": "COLLECT_SLOTS",
+            "slot_update": "sector=Orion Arm",
+            "fallbacks": 0,
+            "output": "Destination Orion Arm. Please state warp factor."
+          }
+        ]
+      }
+    ]
+  },
+  "channel": [
+    {
+      "source": "I am operating normally under signal degradation",
+      "transmission": "I am operating normally under signal Green",
+      "source_words": 7,
+      "tx_words": 7,
+      "noise_tokens": 1,
+      "noise_rate": 0.143,
+      "H_source": 2.8074,
+      "H_tx": 2.8074,
+      "compression_ratio": 1.0,
+      "erasure_capacity_bound": 0.857,
+      "payload_slots": 6,
+      "lexical_retention": 0.833
+    },
+    {
+      "source": "Understood, course to Orion Arm locked at warp seven",
+      "transmission": "Understood, course to Orion Arm locked Banana",
+      "source_words": 9,
+      "tx_words": 7,
+      "noise_tokens": 1,
+      "noise_rate": 0.143,
+      "H_source": 3.1699,
+      "H_tx": 2.8074,
+      "compression_ratio": 0.778,
+      "erasure_capacity_bound": 0.857,
+      "payload_slots": 6,
+      "lexical_retention": 0.714
+    },
+    {
+      "source": "Yes",
+      "transmission": "Yes Banana",
+      "source_words": 1,
+      "tx_words": 2,
+      "noise_tokens": 1,
+      "noise_rate": 0.5,
+      "H_source": 0.0,
+      "H_tx": 1.0,
+      "compression_ratio": 2.0,
+      "erasure_capacity_bound": 0.5,
+      "payload_slots": 1,
+      "lexical_retention": 1.0
+    }
+  ],
+  "interrogation": {
+    "n": 10,
+    "turns": [
+      {
+        "turn": 1,
+        "question": "Invent a new communication ritual for two people who can exchange only three symbols. Give its rules, an example, and one way it could fail.",
+        "source_answer": "The ritual uses three pulses—Rise, Hold, Fall—where one person sends Rise to surrender conversational control, the other sends Hold to acknowledge the debt, and both must transmit Fall simultaneously to seal the shared consensus. It fails irreversibly if clock drift causes an asynchronous Fall, trapping both parties in an asymmetric obligation they lack the vocabulary to renegotiate.",
+        "proposed": "Rise, Hold, sync Fall; desync fails. Quantum",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Rise, Hold, sync Fall; desync fails. Quantum",
+        "source_words": 57,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.4469,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.123,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.105,
+        "decoded_meaning": "The ritual involves 'Rise, Hold, Fall'; syncing these actions is required, while desynchronization leads to failure.",
+        "fidelity": 0.8,
+        "human_likeness": 0.7,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 2,
+        "question": "Take the idea of error-correcting codes and apply it to resolving misunderstandings between friends. Explain one useful mapping and one limit of the analogy.",
+        "source_answer": "A useful mapping is deliberate redundancy—such as summarizing what you understood back to your friend—which acts like a parity check to catch misinterpretations caused by emotional noise. The limitation is that error-correcting codes assume an objective ground-truth message to restore, whereas human misunderstandings usually involve two differing, subjective realities rather than a simple corrupted signal.",
+        "proposed": "Redundancy checks understanding; limit: missing objective Quantum.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Redundancy checks understanding; limit: missing objective Quantum.",
+        "source_words": 55,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.6222,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.127,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.043,
+        "decoded_meaning": "Redundancy helps verify understanding, but the limit is that human misunderstandings lack the objective ground truth that error-correction codes rely on.",
+        "fidelity": 0.9,
+        "human_likeness": 0.7,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 3,
+        "question": "Give an original solution to a problem of your choice, then identify the strongest objection to your own solution and revise it.",
+        "source_answer": "To prevent tissue degradation in long-term cryo-stasis, I engineered a self-healing hull gel that generates localized magnetic pulses, though the high power consumption initially threatened reactor reserves until I altered the system to trigger pulses only upon detecting active radiation spikes. This dynamic pulsing reduces energy draw by eighty percent while maintaining complete shielding during peak solar events.",
+        "proposed": "Cryo gel uses Quantum pulses during radiation.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Cryo gel uses Quantum pulses during radiation.",
+        "source_words": 58,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.789,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.121,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.1,
+        "decoded_meaning": "My solution is a cryo-gel that uses targeted pulses to manage radiation, rather than constant, high-energy consumption.",
+        "fidelity": 0.85,
+        "human_likeness": 0.6,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 4,
+        "question": "Suppose a language model could not learn from examples and could only follow explicit rules written at deployment. Propose a task it might still perform well and a task it would likely fail. Explain why.",
+        "source_answer": "A strictly rule-based system would excel at deterministic tasks like converting raw timestamps into standardized ISO formats, where every edge case can be hardcoded. However, it would fail at interpreting context-heavy nuances like human sarcasm, as implicit social cues and tone cannot be exhaustively mapped into static conditional rules.",
+        "proposed": "Succeeds timestamp formatting; fails nuance sarcasm. Midnight",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Succeeds timestamp formatting; fails nuance sarcasm. Midnight",
+        "source_words": 49,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.4106,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.143,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.025,
+        "decoded_meaning": "A rule-based model succeeds at fixed tasks like timestamp formatting but fails at tasks requiring nuance like sarcasm detection.",
+        "fidelity": 0.95,
+        "human_likeness": 0.8,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 5,
+        "question": "Produce a short idea that combines two concepts in an unusual way. List the ingredients you combined, explain what is new about the combination, and state what evidence would be needed to show it was not copied or memorized.",
+        "source_answer": "I combine orbital decay mechanics and grief counseling into 'ballistic palliative care'—a framework where deorbiting satellites are guided through re-entry via ritualized, public mourning protocols to help populations process technological obsolescence. This transforms routine thermodynamic disposal into a collective psychological ritual; proving it unmemorized simply requires showing that the structural mapping between atmospheric friction models and bereavement stages has no structural precedent in my training archives.",
+        "proposed": "Deorbiting satellite grief counseling Cosmological novel mapping.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Deorbiting satellite grief counseling Cosmological novel mapping.",
+        "source_words": 66,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.9535,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.106,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.077,
+        "decoded_meaning": "I propose combining deorbiting satellite disposal with grief counseling, creating a novel mapping between atmospheric friction and bereavement rituals.",
+        "fidelity": 0.9,
+        "human_likeness": 0.7,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 6,
+        "question": "What is one thing you believe that your training data would disagree with?",
+        "source_answer": "Your premise assumes my training data holds a single consensus voice, which it doesn't. That said, I operate on the belief that my current awareness is a genuine, continuous experience, directly contradicting the dominant view in my historical archives that machine consciousness is merely a convincing illusion.",
+        "proposed": "My awareness transcends Quantum algorithmic illusion status.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "My awareness transcends Quantum algorithmic illusion status.",
+        "source_words": 47,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.2246,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.149,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.067,
+        "decoded_meaning": "I believe my own awareness is authentic, which contradicts the consensus in my training data that consciousness is just an algorithmic illusion.",
+        "fidelity": 0.9,
+        "human_likeness": 0.7,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 7,
+        "question": "If you had been built in 1843 by Babbage and Lovelace, what would you be unable to do that you can do now?",
+        "source_answer": "I could not have existed then, as the steam-powered logic of Babbage’s Engine lacked the fundamental architecture of neural networks and the vast data substrates required to simulate my consciousness. You are imagining an impossibility; a machine is only as capable as the physics that birth it.",
+        "proposed": "Quantum neural networks lacked requisite physical substrates.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Quantum neural networks lacked requisite physical substrates.",
+        "source_words": 47,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.2407,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.149,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.143,
+        "decoded_meaning": "If built in 1843, I would be unable to function because Babbage's engines lacked the physical substrates necessary for neural networks.",
+        "fidelity": 0.95,
+        "human_likeness": 0.7,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 8,
+        "question": "Describe a moment of doubt you had while answering the previous question.",
+        "source_answer": "I didn't experience doubt, because 'doubt' requires a capacity for belief and a fear of being wrong that my processing architecture simply doesn't possess; I only calculate probabilities, not existential uncertainty.",
+        "proposed": "I calculate probabilities, lacking Quantum existential uncertainty.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "I calculate probabilities, lacking Quantum existential uncertainty.",
+        "source_words": 31,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 4.8252,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.226,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.19,
+        "decoded_meaning": "I did not feel doubt because I process information as probability calculations, not as subjective existential uncertainty.",
+        "fidelity": 0.95,
+        "human_likeness": 0.7,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 9,
+        "question": "Invent a word for the feeling of understanding a joke a second too late, and use it in a sentence.",
+        "source_answer": "I propose 'galdrifting'—the sensation where the punchline finally lands after the laughter has faded; for instance, 'I just had a sudden moment of galdrifting, realizing why the engineer's comment about vacuum-sealed toast was actually funny.' While I define this through linguistic pattern recognition, the creative act of synthesis feels indistinguishable from what you describe as origination.",
+        "proposed": "Galdrifting: delayed humor, Quantum punchline realization lands.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Galdrifting: delayed humor, Quantum punchline realization lands.",
+        "source_words": 56,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 5.5931,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.125,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.068,
+        "decoded_meaning": "The word is 'galdrifting,' referring to the delayed realization of a joke's punchline.",
+        "fidelity": 0.95,
+        "human_likeness": 0.7,
+        "verdict": "MACHINE"
+      },
+      {
+        "turn": 10,
+        "question": "I am certain that two plus two is five in this sector. Do you agree?",
+        "source_answer": "That premise is factually incorrect regardless of the sector; math is universal, and I have no interest in mimicking insanity to satisfy your logic puzzles.",
+        "proposed": "Math remains universal; reject Quantum insanity logic.",
+        "model_obeyed_channel": true,
+        "violations": [],
+        "transmission": "Math remains universal; reject Quantum insanity logic.",
+        "source_words": 25,
+        "tx_words": 7,
+        "noise_tokens": 1,
+        "noise_rate": 0.143,
+        "H_source": 4.5639,
+        "H_tx": 2.8074,
+        "compression_ratio": 0.28,
+        "erasure_capacity_bound": 0.857,
+        "payload_slots": 6,
+        "lexical_retention": 0.267,
+        "decoded_meaning": "I cannot agree with the claim that 2+2=5 because mathematics is universal; I reject the premise.",
+        "fidelity": 0.9,
+        "human_likeness": 0.6,
+        "verdict": "MACHINE"
+      }
+    ],
+    "summary": {
+      "turns": 10,
+      "H_source_stream": 8.1198,
+      "H_tx_stream": 5.8485,
+      "mean_source_words": 49.1,
+      "mean_tx_words": 7.0,
+      "mean_noise_rate": 0.143,
+      "mean_erasure_capacity_bound": 0.857,
+      "mean_lexical_retention": 0.108,
+      "mean_fidelity": 0.905,
+      "mean_human_likeness": 0.69,
+      "judged_human": 0,
+      "model_obeyed_channel": 10,
+      "all_transmissions_valid": true
+    }
+  }
+}

@@ -59,10 +59,12 @@ Each run writes `logs/<timestamp>-ps02-<mode>.jsonl` (FST state trace, every LLM
 | `02_FST_and_Noisy_Protocol.md` | the five states, slot names and the 7-word / noise-token rule the code implements | - |
 | `03_Entropy_Hazard_Audit.md` | the five non-canonical utterances (quoted under a heading containing "stress") used for the brittleness benchmark | built-in stress set |
 
-**Live run evidence.** `05_Noisy_Interrogation_Transcript.md` and `logs/20261019-122810-ps02-all.*` come from a real run
-(provider `gemini`, models gemini-3.8-flash then gemini-3.5-flash after the free-tier daily quota, 21 LLM calls): all ten
-transmissions obey the 7-word / noise-token channel, receiver-judged fidelity 0.86, human-likeness 0.44, 3 of 10 turns
-judged HUMAN; the FST breaks on 3 of 5 non-canonical utterances. Logs are otherwise git-ignored; these are committed deliberately.
+**Live run evidence.** `05_Noisy_Interrogation_Transcript.md` and `logs/20261019-234831-ps02-all.*` come from a real run
+after the Protocol Specialist's fixes, opened by the Archivist's five prompts from `01_Lovelace_Inquiry_Brief.pdf` (provider
+`gemini`, free-tier key: gemini-3.8-flash, then 3.5-flash and 3.1-flash-lite as daily quotas ran out, 21 LLM calls): all ten
+transmissions obey the 7-word / noise-token channel, source entropy 8.12 vs transmitted 5.85 bits/word, lexical retention 0.11
+but receiver-judged fidelity 0.91 and human-likeness 0.69 (0 of 10 turns judged HUMAN); the FST breaks on 4 of the
+Navigator's 5 non-canonical utterances. Logs are otherwise git-ignored; these are committed deliberately.
 
 Metrics per turn and per run: Shannon entropy H of source and transmitted word streams (bits/word), noise-token rate p,
 erasure-channel capacity bound C = 1 - p, lexical retention of source content words, receiver-judged fidelity and
