@@ -1,0 +1,41 @@
+{
+  "mission": "03",
+  "station": "Systems Architect",
+  "mode": "bench",
+  "torch": "2.14.1",
+  "python": "3.12.15",
+  "timestamp": "2026-10-22T11:46:13",
+  "device": "cpu",
+  "rows": [
+    {
+      "seq_len": 128,
+      "forward_ms": 0.2590140017370383,
+      "score_matrix_mb": 0.25,
+      "time_ratio_vs_prev": NaN
+    },
+    {
+      "seq_len": 256,
+      "forward_ms": 0.49493033050869906,
+      "score_matrix_mb": 1.0,
+      "time_ratio_vs_prev": 1.9108246163895524
+    },
+    {
+      "seq_len": 512,
+      "forward_ms": 1.3594860016989212,
+      "score_matrix_mb": 4.0,
+      "time_ratio_vs_prev": 2.7468229726426645
+    },
+    {
+      "seq_len": 1024,
+      "forward_ms": 5.379291658755392,
+      "score_matrix_mb": 16.0,
+      "time_ratio_vs_prev": 3.956856968025418
+    },
+    {
+      "seq_len": 2048,
+      "forward_ms": 17.0833053222547,
+      "score_matrix_mb": 64.0,
+      "time_ratio_vs_prev": 3.1757536876532306
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+torch>=2.4
+numpy>=1.26
+# optional, for the Protocol Officer's RoPE vs ALiBi decay heatmap (Part 2):
+# matplotlib>=3.8
