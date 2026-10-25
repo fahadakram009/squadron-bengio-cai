@@ -268,6 +268,7 @@ def load_sibling(path: Path, name: str):
     try:
         spec = importlib.util.spec_from_file_location(name, path)
         mod = importlib.util.module_from_spec(spec)
+        sys.modules[name] = mod          # dataclasses / postponed annotations look the module up here
         spec.loader.exec_module(mod)
         return mod
     except Exception as exc:  # teammate file present but not importable (e.g. plotting at import time)
@@ -437,9 +438,15 @@ def self_test(seed: int = 42, quiet: bool = False, device: str = "cpu") -> Check
               "03_GQA_and_KVCache_Benchmark_starter.py not importable / not yet pushed", skipped=True)
     else:
         try:
-            g = gqa.GQAAttention(d_model=d, num_q_heads=h, num_kv_heads=h).to(dev).eval()
+            try:                       # starter kwarg name vs. the Payload Specialist's final name
+                g = gqa.GQAAttention(d_model=d, num_q_heads=h, num_kv_heads=h)
+            except TypeError:
+                g = gqa.GQAAttention(d_model=d, num_query_heads=h, num_kv_heads=h)
+            g = g.to(dev).eval()
             with torch.no_grad():
-                for src, dst in ((mha.w_q, g.w_q), (mha.w_k, g.w_k), (mha.w_v, g.w_v), (mha.w_o, g.w_o)):
+                for src, names in ((mha.w_q, ("w_q", "q_proj")), (mha.w_k, ("w_k", "k_proj")),
+                                   (mha.w_v, ("w_v", "v_proj")), (mha.w_o, ("w_o", "o_proj"))):
+                    dst = next(getattr(g, a) for a in names if hasattr(g, a))
                     dst.weight.copy_(src.weight)
                 g_out = g(x)
                 g_out = g_out[0] if isinstance(g_out, tuple) else g_out

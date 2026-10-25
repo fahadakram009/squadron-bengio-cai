@@ -1,0 +1,191 @@
+{
+  "mission": "03",
+  "station": "Systems Architect",
+  "mode": "selftest",
+  "torch": "2.14.1",
+  "python": "3.12.15",
+  "timestamp": "2026-10-25T17:14:06",
+  "seed": 42,
+  "device": "cpu",
+  "passed": 27,
+  "failed": 0,
+  "checks": [
+    {
+      "check": "output shape (b, n, d_model)",
+      "status": "PASS",
+      "detail": "(2, 16, 256)"
+    },
+    {
+      "check": "weights shape (b, h, n, n)",
+      "status": "PASS",
+      "detail": "(2, 4, 16, 16)"
+    },
+    {
+      "check": "softmax rows sum to 1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "causal: zero weight above the diagonal",
+      "status": "PASS",
+      "detail": "max=0.0e+00"
+    },
+    {
+      "check": "no NaN/Inf in output",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "causal: perturbing positions >= 9 leaves outputs < 9 unchanged",
+      "status": "PASS",
+      "detail": "max diff=0.0e+00"
+    },
+    {
+      "check": "non-causal: the same perturbation does change earlier outputs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "padding: masked key columns get zero weight",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "padding: fully masked query rows -> zero weights, finite output (no NaN)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "padding: remaining rows still sum to 1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "merge_heads(split_heads(x)) == x",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "vectorised heads == explicit per-head loop + concat",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "head_dim * num_heads == d_model",
+      "status": "PASS",
+      "detail": "64x4"
+    },
+    {
+      "check": "matches F.scaled_dot_product_attention(is_causal=True)",
+      "status": "PASS",
+      "detail": "max diff=1.5e-07"
+    },
+    {
+      "check": "matches nn.MultiheadAttention with copied weights (output)",
+      "status": "PASS",
+      "detail": "max diff=0.0e+00"
+    },
+    {
+      "check": "matches nn.MultiheadAttention with copied weights (attention map)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "backward: finite, non-zero gradients for W_Q, W_K, W_V, W_O",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "backward: gradient reaches the input",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "dropout active in train mode (two passes differ)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "deterministic in eval mode",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "parameter count = 4 * d_model^2 (bias-free)",
+      "status": "PASS",
+      "detail": "262,144"
+    },
+    {
+      "check": "Var(q.k) == d_k within 10% for d_k in 16..1024",
+      "status": "PASS",
+      "detail": "16:16.3, 64:64.0, 256:255.4, 1024:1024.0"
+    },
+    {
+      "check": "Var(q.k / sqrt(d_k)) == 1 within 0.1 for every d_k",
+      "status": "PASS",
+      "detail": "16:1.019, 64:1.000, 256:0.998, 1024:1.000"
+    },
+    {
+      "check": "without the scale softmax saturates (entropy < 0.5 bit at d_k=1024; scaled stays > 4 bits)",
+      "status": "PASS",
+      "detail": "H=0.212 vs 6.298 of 7.00 bits"
+    },
+    {
+      "check": "Part 2 RoPE hook: attention weights invariant to a global shift of 37 positions",
+      "status": "PASS",
+      "detail": "max diff=1.2e-07"
+    },
+    {
+      "check": "Part 2 RoPE hook: rotation does change the attention pattern vs. no positions",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "Part 3 GQAAttention(H_KV == H_Q) equals MultiHeadSelfAttention (causal)",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "variance_study": [
+    {
+      "d_k": 16,
+      "mean_unscaled": -0.001150396652519703,
+      "var_unscaled": 16.31138801574707,
+      "mean_scaled": -0.00028759916312992573,
+      "var_scaled": 1.019461750984192,
+      "entropy_bits_unscaled": 2.3826615810394287,
+      "entropy_bits_scaled": 6.291378974914551,
+      "max_entropy_bits": 7.0
+    },
+    {
+      "d_k": 64,
+      "mean_unscaled": -0.006976976525038481,
+      "var_unscaled": 64.029541015625,
+      "mean_scaled": -0.0008721220656298101,
+      "var_scaled": 1.0004615783691406,
+      "entropy_bits_unscaled": 0.9564086198806763,
+      "entropy_bits_scaled": 6.298640251159668,
+      "max_entropy_bits": 7.0
+    },
+    {
+      "d_k": 256,
+      "mean_unscaled": -0.03085818700492382,
+      "var_unscaled": 255.4469451904297,
+      "mean_scaled": -0.0019286366878077388,
+      "var_scaled": 0.997839629650116,
+      "entropy_bits_unscaled": 0.43423575162887573,
+      "entropy_bits_scaled": 6.299862861633301,
+      "max_entropy_bits": 7.0
+    },
+    {
+      "d_k": 1024,
+      "mean_unscaled": -0.028530310839414597,
+      "var_unscaled": 1023.9735717773438,
+      "mean_scaled": -0.0008915722137317061,
+      "var_scaled": 0.9999741911888123,
+      "entropy_bits_unscaled": 0.2115374356508255,
+      "entropy_bits_scaled": 6.297933101654053,
+      "max_entropy_bits": 7.0
+    }
+  ]
+}
