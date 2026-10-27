@@ -32,7 +32,7 @@ Before transmitting your team's repository link on the course website submission
 - [ ] **Systems Architect (`01_DPO_Loss_Core.py`):** Pure PyTorch `DPOLoss` module with vectorized log-probability gather and frozen reference policy gradients.
 - [ ] **Communications & Protocol Officer (`02_Implicit_Reward_Evaluator.py`):** Implicit reward extraction, pairwise preference accuracy, and Bradley-Terry calibration curve.
 - [ ] **Data & Payload Specialist (`03_Length_Bias_and_SimPO.py`):** Verbosity correlation analysis and reference-free length-normalized SimPO loss implementation.
-- [ ] **Security & Ethics Sentinel (`04_Activation_Steering_and_Audit.py`):** Linear Artificial Tomography (LAT) steering vector extraction and Alignment Tax capability retention evaluation.
+- [x] **Security & Ethics Sentinel (`04_Activation_Steering_and_Audit.py`)** - Janusz **:** Linear Artificial Tomography (LAT) steering vector extraction and Alignment Tax capability retention evaluation.
 
 ---
 
