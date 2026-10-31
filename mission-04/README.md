@@ -30,7 +30,7 @@ mission-04/
 Before transmitting your team's repository link on the course website submission portal, complete all deliverables and record digital sign-offs from all four station officers:
 
 - [ ] **Systems Architect (`01_DPO_Loss_Core.py`):** Pure PyTorch `DPOLoss` module with vectorized log-probability gather and frozen reference policy gradients.
-- [ ] **Communications & Protocol Officer (`02_Implicit_Reward_Evaluator.py`):** Implicit reward extraction, pairwise preference accuracy, and Bradley-Terry calibration curve.
+- [x] **Communications & Protocol Officer (`02_Implicit_Reward_Evaluator.py`)** - Madhu **:** Implicit reward extraction, pairwise preference accuracy, and Bradley-Terry calibration curve.
 - [ ] **Data & Payload Specialist (`03_Length_Bias_and_SimPO.py`):** Verbosity correlation analysis and reference-free length-normalized SimPO loss implementation.
 - [x] **Security & Ethics Sentinel (`04_Activation_Steering_and_Audit.py`)** - Janusz **:** Linear Artificial Tomography (LAT) steering vector extraction and Alignment Tax capability retention evaluation.
 
