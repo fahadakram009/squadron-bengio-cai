@@ -1,0 +1,95 @@
+{
+  "mission": "ps04",
+  "station": "01 Systems Architect",
+  "mode": "train",
+  "timestamp": "2026-10-31T17:35:45",
+  "torch": "2.14.1",
+  "run": {
+    "beta": 0.1,
+    "steps": 150,
+    "history": [
+      {
+        "step": 0,
+        "train_loss": 0.6931471805599453,
+        "val_loss": 0.6931473016738892,
+        "pairwise_accuracy": 0.0,
+        "reward_margin": 0.0,
+        "bt_probability": 0.5,
+        "chosen_logp_drift": 0.0
+      },
+      {
+        "step": 30,
+        "train_loss": 0.4181499779224396,
+        "val_loss": 0.3613836467266083,
+        "pairwise_accuracy": 0.974609375,
+        "reward_margin": 0.9664066433906555,
+        "bt_probability": 0.706088662147522,
+        "chosen_logp_drift": 4.086940765380859
+      },
+      {
+        "step": 60,
+        "train_loss": 0.13436175882816315,
+        "val_loss": 0.08901478350162506,
+        "pairwise_accuracy": 0.970703125,
+        "reward_margin": 4.62608528137207,
+        "bt_probability": 0.932669997215271,
+        "chosen_logp_drift": -4.645915508270264
+      },
+      {
+        "step": 90,
+        "train_loss": 0.0460551455616951,
+        "val_loss": 0.05639893561601639,
+        "pairwise_accuracy": 0.98046875,
+        "reward_margin": 6.305001735687256,
+        "bt_probability": 0.9591606259346008,
+        "chosen_logp_drift": -6.056059837341309
+      },
+      {
+        "step": 120,
+        "train_loss": 0.02623203955590725,
+        "val_loss": 0.04125010222196579,
+        "pairwise_accuracy": 0.986328125,
+        "reward_margin": 6.71604061126709,
+        "bt_probability": 0.9692063331604004,
+        "chosen_logp_drift": -4.235898017883301
+      },
+      {
+        "step": 150,
+        "train_loss": 0.09012371301651001,
+        "val_loss": 0.03101683408021927,
+        "pairwise_accuracy": 0.990234375,
+        "reward_margin": 7.1523847579956055,
+        "bt_probability": 0.9760539531707764,
+        "chosen_logp_drift": -3.2162744998931885
+      }
+    ],
+    "ref_frozen": true,
+    "uses_mission3_attention": true
+  },
+  "beta_sweep": [
+    {
+      "beta": 0.05,
+      "val_loss": 0.03938908129930496,
+      "pairwise_accuracy": 0.98828125,
+      "reward_margin": 7.319207668304443,
+      "chosen_logp_drift": -20.66134262084961,
+      "ref_frozen": true
+    },
+    {
+      "beta": 0.1,
+      "val_loss": 0.03101683408021927,
+      "pairwise_accuracy": 0.990234375,
+      "reward_margin": 7.1523847579956055,
+      "chosen_logp_drift": -3.2162744998931885,
+      "ref_frozen": true
+    },
+    {
+      "beta": 0.5,
+      "val_loss": 0.017543653026223183,
+      "pairwise_accuracy": 0.994140625,
+      "reward_margin": 8.805115699768066,
+      "chosen_logp_drift": 4.856342315673828,
+      "ref_frozen": true
+    }
+  ]
+}

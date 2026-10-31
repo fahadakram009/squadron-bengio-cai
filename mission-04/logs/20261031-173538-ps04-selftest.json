@@ -1,0 +1,201 @@
+{
+  "mission": "ps04",
+  "station": "01 Systems Architect",
+  "mode": "selftest",
+  "timestamp": "2026-10-31T17:35:38",
+  "torch": "2.14.1",
+  "passed": 38,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "gather == explicit loop (prompt and padding ignored)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gather == -cross_entropy(ignore_index=-100) summed per row",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "row without response tokens gives 0, not NaN",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sequence log-probs are <= 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "average_log_prob == sum / number of response tokens",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "logits at prompt positions do not influence the result",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "appending padding positions does not change the result",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "get_batch_logps_and_lengths returns |y| = number of response tokens",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "shape mismatch raises",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gradient flows to logits (finite) and is zero on ignored positions",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "loss == mean -log sigma(beta (Delta_w - Delta_l)) by hand",
+      "ok": true,
+      "detail": "0.598395 vs 0.598396"
+    },
+    {
+      "name": "implicit rewards r = beta * Delta and margin r_w - r_l",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "policy == reference -> loss = log 2, P(BT) = 0.5, margin 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "adding a constant to both policy log-probs leaves the loss unchanged",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "swapping y_w / y_l gives -log(1 - sigma(z))",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "logits and rewards scale linearly with beta",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "finite loss at z = +-1000 where -log(sigmoid(z)) is inf",
+      "ok": true,
+      "detail": "500.0 vs inf"
+    },
+    {
+      "name": "label smoothing = conservative DPO mixture",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "reference_free == zero reference log-probs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "beta <= 0 rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "torch.autograd.gradcheck (float64) on the four log-prob inputs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "reference inputs are detached inside the loss (no grad even if they require it)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dL/d log pi(y_w) = -beta (1 - sigma(z)) / B, dL/d log pi(y_l) = +beta (1 - sigma(z)) / B",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "every policy parameter gets a finite non-zero gradient",
+      "ok": true,
+      "detail": "14/14"
+    },
+    {
+      "name": "reference: requires_grad False on all params, no .grad after backward",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "one optimizer step: reference digest identical, policy digest changed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "one SGD step lowers the loss and raises the margin on the same batch",
+      "ok": true,
+      "detail": "loss 0.6931 -> 0.6140"
+    },
+    {
+      "name": "autograd matches the analytic gradient on the model's log-probs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "model is causal: changing token 7 leaves logits at positions < 7 unchanged",
+      "ok": true,
+      "detail": "Mission 3 attention"
+    },
+    {
+      "name": "fresh reference == policy: identical log-probs, DPO loss = log 2",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "labels: prompt masked, number of response tokens == sampled length",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "from_logits == forward(get_batch_logps(...)) and keeps a graph to the policy",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "short DPO run: validation loss drops below log 2 and pairwise accuracy rises above 60%",
+      "ok": true,
+      "detail": "loss 0.693 -> 0.225, acc 98%"
+    },
+    {
+      "name": "reference digest unchanged over the whole run",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 2 implicit rewards and P(y_w > y_l) equal the DPOLoss metrics",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 2 uses this file's get_batch_logps / DPOLoss at run time",
+      "ok": true,
+      "detail": "01_DPO_Loss_Core.py"
+    },
+    {
+      "name": "Part 3 SimPOLoss on average_log_prob=True log-probs == -log sigma(beta (avg_w - avg_l) - gamma)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 4 exposes extract_steering_vector and ActivationSteeringHook",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
