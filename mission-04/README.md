@@ -43,7 +43,7 @@ Before transmitting your team's repository link on the course website submission
 source .venv/bin/activate && pip install -r mission-04/requirements.txt
 cd mission-04
 python 01_DPO_Loss_Core.py                   # demo: log-prob gather, loss, numerical stability, gradient test
-python 01_DPO_Loss_Core.py --selftest        # 38 checks: gather oracle, loss algebra, gradients, frozen ref, integration
+python 01_DPO_Loss_Core.py --selftest        # 39 checks: gather oracle, loss algebra, gradients, frozen ref, integration
 python 01_DPO_Loss_Core.py --train           # 150-step DPO run on synthetic preference pairs + beta sweep
 python 01_DPO_Loss_Core.py --check-signoffs  # gate: all four boxes above must be ticked
 ```

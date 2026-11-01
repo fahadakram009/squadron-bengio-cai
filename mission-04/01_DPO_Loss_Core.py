@@ -753,10 +753,16 @@ def self_test(seed: int = 0, quiet: bool = False) -> Checks:
     if p3 is not None and hasattr(p3, "SimPOLoss"):
         aw = get_batch_logps(policy(batch["chosen_input_ids"]), batch["chosen_labels"], average_log_prob=True)
         al = get_batch_logps(policy(batch["rejected_input_ids"]), batch["rejected_labels"], average_log_prob=True)
-        sl, _ = p3.SimPOLoss(beta=2.0, gamma=0.5)(aw, al)
+        sl = p3.SimPOLoss(beta=2.0, gamma=0.5)(aw, al)
+        sl = sl[0] if isinstance(sl, tuple) else sl  # Part 3 returns a tensor, or (loss, metrics)
         expect = (-F.logsigmoid(2.0 * (aw - al) - 0.5)).mean()
         c.add("Part 3 SimPOLoss on average_log_prob=True log-probs == -log sigma(beta (avg_w - avg_l) - gamma)",
               abs(sl.item() - expect.item()) < 1e-5 and bool((aw <= 0).all() and (aw >= -math.log(data.vocab) - 1).all()))
+        if hasattr(p3, "completion_average_log_probs"):
+            p3_avg, p3_cnt = p3.completion_average_log_probs(policy(batch["chosen_input_ids"]), batch["chosen_labels"])
+            _, my_cnt = get_batch_logps_and_lengths(policy(batch["chosen_input_ids"]), batch["chosen_labels"])
+            c.add("Part 3 completion_average_log_probs == get_batch_logps(average_log_prob=True), same |y|",
+                  torch.allclose(p3_avg, aw, atol=1e-5) and torch.equal(p3_cnt, my_cnt))
     else:
         c.add("Part 3 not importable - integration check skipped", True)
     p4 = load_sibling(PART4, "part4_steering")
