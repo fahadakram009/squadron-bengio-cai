@@ -1,0 +1,201 @@
+{
+  "mission": "ps05",
+  "station": "01 Systems Architect",
+  "mode": "bench",
+  "timestamp": "2026-11-08T17:06:50",
+  "numpy": "2.5.4",
+  "n": 25000,
+  "dim": 768,
+  "kind": "clustered",
+  "M": 16,
+  "ef_construction": 64,
+  "ef_search": 64,
+  "k": 10,
+  "n_queries": 100,
+  "rows": [
+    {
+      "N": 1000,
+      "build_s_cumulative": 1.810672500054352,
+      "hnsw": {
+        "mean_ms": 0.6264662044122815,
+        "median_ms": 0.6041040178388357,
+        "p95_ms": 0.8422499522566795,
+        "min_ms": 0.5443330155685544
+      },
+      "flat": {
+        "mean_ms": 0.041606161976233125,
+        "median_ms": 0.03827048931270838,
+        "p95_ms": 0.08324999362230301,
+        "min_ms": 0.028833048418164253
+      },
+      "speedup_median": 0.06335082731219024,
+      "recall": 1.0,
+      "dist_calcs_per_query": 591.94,
+      "flat_dist_calcs": 1000,
+      "layer_sizes": [
+        1000,
+        80,
+        8,
+        1
+      ]
+    },
+    {
+      "N": 2500,
+      "build_s_cumulative": 4.886668291059323,
+      "hnsw": {
+        "mean_ms": 0.7380758377257735,
+        "median_ms": 0.6973544950596988,
+        "p95_ms": 0.9464169852435589,
+        "min_ms": 0.563250039704144
+      },
+      "flat": {
+        "mean_ms": 0.09045753045938909,
+        "median_ms": 0.08572946535423398,
+        "p95_ms": 0.14045799616724253,
+        "min_ms": 0.052625080570578575
+      },
+      "speedup_median": 0.12293527318110266,
+      "recall": 1.0,
+      "dist_calcs_per_query": 606.26,
+      "flat_dist_calcs": 2500,
+      "layer_sizes": [
+        2500,
+        176,
+        12,
+        1
+      ]
+    },
+    {
+      "N": 5000,
+      "build_s_cumulative": 9.903337666066363,
+      "hnsw": {
+        "mean_ms": 0.6703780242241919,
+        "median_ms": 0.6555829895660281,
+        "p95_ms": 0.8103749714791775,
+        "min_ms": 0.4905420355498791
+      },
+      "flat": {
+        "mean_ms": 0.25468254112638533,
+        "median_ms": 0.2536039683036506,
+        "p95_ms": 0.3090000245720148,
+        "min_ms": 0.20345801021903753
+      },
+      "speedup_median": 0.3868373224136385,
+      "recall": 1.0,
+      "dist_calcs_per_query": 522.93,
+      "flat_dist_calcs": 5000,
+      "layer_sizes": [
+        5000,
+        335,
+        19,
+        2
+      ]
+    },
+    {
+      "N": 10000,
+      "build_s_cumulative": 20.201492332969792,
+      "hnsw": {
+        "mean_ms": 0.641157483914867,
+        "median_ms": 0.5977709661237895,
+        "p95_ms": 0.9330420289188623,
+        "min_ms": 0.4476249450817704
+      },
+      "flat": {
+        "mean_ms": 0.5537708220072091,
+        "median_ms": 0.5355834728106856,
+        "p95_ms": 0.7284999592229724,
+        "min_ms": 0.4266659962013364
+      },
+      "speedup_median": 0.8959676919132507,
+      "recall": 1.0,
+      "dist_calcs_per_query": 402.13,
+      "flat_dist_calcs": 10000,
+      "layer_sizes": [
+        10000,
+        650,
+        44,
+        4
+      ]
+    },
+    {
+      "N": 25000,
+      "build_s_cumulative": 51.15753774996847,
+      "hnsw": {
+        "mean_ms": 0.556416327599436,
+        "median_ms": 0.5092499195598066,
+        "p95_ms": 0.8625841001048684,
+        "min_ms": 0.3832089714705944
+      },
+      "flat": {
+        "mean_ms": 1.8122749542817473,
+        "median_ms": 1.609708066098392,
+        "p95_ms": 2.8031249530613422,
+        "min_ms": 1.1614169925451279
+      },
+      "speedup_median": 3.1609392643396323,
+      "recall": 1.0,
+      "dist_calcs_per_query": 304.15,
+      "flat_dist_calcs": 25000,
+      "layer_sizes": [
+        25000,
+        1627,
+        92,
+        5,
+        1
+      ]
+    }
+  ],
+  "ef_sweep": [
+    {
+      "ef": 16,
+      "recall": 0.944,
+      "median_ms": 0.32112549524754286,
+      "dist_calcs_per_query": 235.21
+    },
+    {
+      "ef": 32,
+      "recall": 0.967,
+      "median_ms": 0.4221880226396024,
+      "dist_calcs_per_query": 263.09
+    },
+    {
+      "ef": 64,
+      "recall": 1.0,
+      "median_ms": 0.5184585461392999,
+      "dist_calcs_per_query": 304.15
+    },
+    {
+      "ef": 128,
+      "recall": 1.0,
+      "median_ms": 0.9032704983837903,
+      "dist_calcs_per_query": 425.24
+    },
+    {
+      "ef": 256,
+      "recall": 1.0,
+      "median_ms": 1.785666448995471,
+      "dist_calcs_per_query": 894.92
+    }
+  ],
+  "stats": {
+    "n": 25000,
+    "dim": 768,
+    "M": 16,
+    "M_max0": 32,
+    "ef_construction": 64,
+    "m_L": 0.36067376022224085,
+    "max_level": 4,
+    "layer_sizes": [
+      25000,
+      1627,
+      92,
+      5,
+      1
+    ],
+    "entry_point_id": 20161,
+    "avg_degree_layer0": 25.16308,
+    "max_degree_layer0": 32,
+    "graph_memory_mb": 5.009468078613281,
+    "vector_memory_mb": 73.2421875
+  }
+}

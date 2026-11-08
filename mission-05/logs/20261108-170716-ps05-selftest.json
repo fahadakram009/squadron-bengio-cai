@@ -1,0 +1,186 @@
+{
+  "mission": "ps05",
+  "station": "01 Systems Architect",
+  "mode": "selftest",
+  "timestamp": "2026-11-08T17:07:16",
+  "numpy": "2.5.4",
+  "passed": 35,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "sim(u, u) = 1, sim(u, -u) = -1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "orthogonal vectors give 0, zero vector gives 0 (no NaN)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "scale invariance: sim(3u, 0.1v) = sim(u, v)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "vectorised matrix == scalar function on every pair",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "brute force == argsort of the full similarity row",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "m_L = 1 / ln M",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "P(level >= 1) = 1/M and P(level >= 2) = 1/M^2 (40,000 draws)",
+      "ok": true,
+      "detail": "0.0645 vs 0.0625, 0.0035 vs 0.0039"
+    },
+    {
+      "name": "levels are non-negative integers with mean 1/(M-1)",
+      "ok": true,
+      "detail": "mean 0.0682"
+    },
+    {
+      "name": "seed= gives a reproducible level sequence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "layer 0 holds every node, sizes shrink geometrically upward",
+      "ok": true,
+      "detail": "[2000, 260, 40, 7, 1]"
+    },
+    {
+      "name": "a node on layer l is present on every layer below it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "entry point lives on the top layer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no node exceeds M_max (M upper layers, 2M on layer 0) after pruning",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "most layer-0 edges are bidirectional (pruning may drop one direction)",
+      "ok": true,
+      "detail": "0.91"
+    },
+    {
+      "name": "no self-loops, no duplicate neighbours",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "layer 0 is one connected component (every vector reachable from the entry point)",
+      "ok": true,
+      "detail": "2000/2000"
+    },
+    {
+      "name": "stored vectors are unit length, ids map back to rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "search_layer with ef = N on layer 0 returns the exact top-10 (graph is navigable)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "greedy descent == search_layer(ef = 1) ends at a local optimum with similarity >= start",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "recall@10 >= 0.9 at ef = 64 (2,000 x 64 clustered)",
+      "ok": true,
+      "detail": "1.000"
+    },
+    {
+      "name": "recall grows with ef (ef = 10 < ef = 400) and reaches ~1.0",
+      "ok": true,
+      "detail": "0.890 -> 1.000"
+    },
+    {
+      "name": "querying a stored vector returns itself at rank 1 (>= 48/50)",
+      "ok": true,
+      "detail": "50/50"
+    },
+    {
+      "name": "results are sorted best first with cosine in [-1, 1]",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "query is scale invariant (q and 10q give the same ids)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "empty index returns []",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "add_items works and top_k > N returns all N results",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "duplicate id is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dimension mismatch is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ids need not be contiguous (external ids are returned)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "HNSW compares far fewer vectors than flat search (N = 8,000: < N / 10)",
+      "ok": true,
+      "detail": "219 of 8,000"
+    },
+    {
+      "name": "comparisons grow sub-linearly: x16 data -> less than x3 comparisons",
+      "ok": true,
+      "detail": "265 -> 283 -> 219"
+    },
+    {
+      "name": "Algorithm 4 (heuristic neighbours) beats plain top-M on clustered data (4,000 x 64, 200 clusters)",
+      "ok": true,
+      "detail": "heuristic 0.967 vs simple 0.833"
+    },
+    {
+      "name": "Part 2 DenseRetriever builds this index (01_HNSW_Vector_Index_starter.py:SimpleHNSW) and gets recall@10 >= 0.9",
+      "ok": true,
+      "detail": "1.00"
+    },
+    {
+      "name": "Part 2 rrf_fuse: a document ranked by both streams wins (k = 60)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 4 exposes injection / RAG-triad components",
+      "ok": true,
+      "detail": "PromptInjectionSanitizer, RAGTriadEvaluator, RAGTriadResult, compute_rag_triad_metrics"
+    }
+  ]
+}

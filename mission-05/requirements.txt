@@ -1,0 +1,2 @@
+numpy>=1.26
+# matplotlib is optional (Part 2 figure); scipy not needed this week
