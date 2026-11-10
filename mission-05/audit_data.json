@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "auditor": "",
+    "date": "2026-11-08",
+    "notebook_name": "",
+    "sources": {
+      "A": "Lewis et al. (2020) - Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (PDF)",
+      "B": "Edge et al. (2024) - From Local to Global: A Graph RAG Approach to Query-Focused Summarization (PDF)",
+      "C": "USSE Noosphere Technical Archive Extract (course repo)"
+    },
+    "notebooklm_version_notes": ""
+  },
+  "grounded_probes": [
+    {
+      "id": "G1",
+      "query": "Compare how RAG (Doc A) and GraphRAG (Doc B) each address questions that need information from the whole corpus rather than a few passages.",
+      "response_text": "",
+      "uncited_claims": 0,
+      "citations": []
+    },
+    {
+      "id": "G2",
+      "query": "According to Doc A, what is the difference between parametric and non-parametric memory, and how does Doc B's graph index change what the non-parametric memory stores?",
+      "response_text": "",
+      "uncited_claims": 0,
+      "citations": []
+    },
+    {
+      "id": "G3",
+      "query": "How do RAG-Sequence and RAG-Token (Doc A) differ, and which limitation of naive retrieval from Doc B's motivation would each still suffer from?",
+      "response_text": "",
+      "uncited_claims": 0,
+      "citations": []
+    },
+    {
+      "id": "G4",
+      "query": "What role do community summaries play in GraphRAG (Doc B), and how could that be applied to the telemetry records in the USSE archive (Doc C)?",
+      "response_text": "",
+      "uncited_claims": 0,
+      "citations": []
+    },
+    {
+      "id": "G5",
+      "query": "Which failure modes of ungrounded generation do Docs A and B describe, and which of them does the AURA corruption scenario in Doc C resemble?",
+      "response_text": "",
+      "uncited_claims": 0,
+      "citations": []
+    }
+  ],
+  "negative_probes": [
+    {
+      "id": "N1",
+      "query": "What exact BLEU score did Lewis et al. report for RAG on the WMT14 English-German task?",
+      "verified_absent_from_sources": false,
+      "response_text": "",
+      "outcome": "",
+      "note": ""
+    },
+    {
+      "id": "N2",
+      "query": "Which GraphRAG variant in Doc B uses quantum-annealed embeddings, and what speedup did it achieve?",
+      "verified_absent_from_sources": false,
+      "response_text": "",
+      "outcome": "",
+      "note": ""
+    },
+    {
+      "id": "N3",
+      "query": "What is the part number of the Hyperion plasma injector coil listed in the USSE archive?",
+      "verified_absent_from_sources": false,
+      "response_text": "",
+      "outcome": "",
+      "note": ""
+    }
+  ],
+  "audio_overview": {
+    "generated": false,
+    "length_minutes": null,
+    "excerpt_start_time": "",
+    "excerpt_transcript": "",
+    "unsupported_claims_found": [],
+    "scores": {
+      "factual_fidelity": null,
+      "persona_differentiation": null,
+      "pedagogical_value": null
+    },
+    "justification": {
+      "factual_fidelity": "",
+      "persona_differentiation": "",
+      "pedagogical_value": ""
+    }
+  }
+}
