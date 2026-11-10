@@ -1,0 +1,26 @@
+{
+  "mission": "ps05",
+  "station": "01 Systems Architect",
+  "mode": "signoffs",
+  "timestamp": "2026-11-10T14:53:12",
+  "numpy": "2.5.4",
+  "passed": true,
+  "rows": [
+    [
+      "Systems Architect",
+      true
+    ],
+    [
+      "Communications & Protocol Officer",
+      true
+    ],
+    [
+      "Data & Payload Specialist",
+      true
+    ],
+    [
+      "Security & Ethics Sentinel",
+      true
+    ]
+  ]
+}

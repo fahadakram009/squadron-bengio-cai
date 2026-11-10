@@ -31,7 +31,7 @@ Before transmitting your team's repository link on the course website submission
 
 - [x] **Systems Architect (`01_HNSW_Vector_Index_starter.py`)** - Fahad **:** Pure Python/NumPy HNSW graph indexing, logarithmic skip-list traversal, and benchmark against brute-force flat search.
 - [x] **Communications & Protocol Officer (`02_BM25_and_RRF_Combiner.py`)** - Madhu **:** Okapi BM25 lexical scorer and Reciprocal Rank Fusion ($k=60$) combiner merging dense & sparse candidate streams.
-- [ ] **Data & Payload Specialist (`03_NotebookLM_Grounding_Lab_template.md`):** Google NotebookLM empirical laboratory: source-grounded citation extraction, negative constraint audit, and Audio Overview evaluation.
+- [x] **Data & Payload Specialist (`03_NotebookLM_Grounding_Lab_template.md` / `03_NotebookLM_RAG_Audit.py`)** - Osaf **:** Google NotebookLM empirical laboratory (protocol and report generator uploaded 2026-11-08; probe observations pending): source-grounded citation extraction, negative constraint audit, and Audio Overview evaluation.
 - [x] **Security & Ethics Sentinel (`04_Prompt_Injection_and_RAG_Audit_starter.py` / `04_RAG_Provenance_and_Safety.py`)** - Janusz **:** Indirect prompt injection sanitizer and automated RAG Triad audit (Faithfulness, Answer Relevance, Context Recall).
 
 ---
