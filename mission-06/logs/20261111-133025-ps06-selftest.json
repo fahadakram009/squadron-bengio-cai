@@ -1,0 +1,226 @@
+{
+  "mission": "ps06",
+  "station": "01 Systems Architect",
+  "mode": "selftest",
+  "timestamp": "2026-11-11T13:30:25",
+  "python": "3.12.15",
+  "passed": 42,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "AgentState has exactly the seven briefing states in order",
+      "passed": true,
+      "detail": "['IDLE', 'PERCEIVING', 'DELIBERATING', 'ACTING', 'OBSERVING', 'REFLECTING', 'HALTED']"
+    },
+    {
+      "name": "only HALTED is terminal",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Agent is a standard dataclass with the starter's fields",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "graph: every state has a graph entry",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "graph: HALTED is absorbing (no successors)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "graph: REFLECTING is the only branch point",
+      "passed": true,
+      "detail": "['REFLECTING']"
+    },
+    {
+      "name": "graph: every non-terminal state has at least one successor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "graph: all seven states reachable from IDLE",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "name": "graph: HALTED reachable from every state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "graph: next_state is total, deterministic and stays on graph edges",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "graph: REFLECTING branches on the mission flag",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "first step IDLE -> PERCEIVING, counts 1, returns (prev, new)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "six steps follow the strict graph and loop back from REFLECTING",
+      "passed": true,
+      "detail": "PERCEIVING > DELIBERATING > ACTING > OBSERVING > REFLECTING > DELIBERATING"
+    },
+    {
+      "name": "exactly one transition per step()",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "REFLECTING -> HALTED when the mission flag is set",
+      "passed": true,
+      "detail": "mission completed"
+    },
+    {
+      "name": "mission halt counts as a step (6 of 10) and is in the trace",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "budget 5: eight calls end HALTED with step_count exactly 5 (Sentinel's check)",
+      "passed": true,
+      "detail": "step budget 5 exhausted"
+    },
+    {
+      "name": "master test 1: default budget 20, forced to run 21 steps, strictly HALTED at 20",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forced halt is recorded in the trace as a forced transition",
+      "passed": true,
+      "detail": "forced: step budget 20 exhausted"
+    },
+    {
+      "name": "run() with the goal never reached halts after exactly 20 counted steps",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "max_steps = 21 is refused (hard cap N <= 20)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "max_steps = 0 is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "non-integer max_steps is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "step_count beyond the budget is refused at construction",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "HALTED is absorbing: further step() calls change nothing",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "halt() forces HALTED from any state without counting a step",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "halt() on a halted agent is a no-op",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "perception input and remember() land in memory with the step number",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "run() feeds perceptions in order and halts on the budget",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "every traced edge lies on the graph",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "reset() restores IDLE, zero steps, empty memory and trace",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "to_dict() is JSON serialisable with the trace",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "to_mermaid() lists the seven graph edges, the budget guard and start/end",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "model check: every schedule for every N in 1..20 halts within N steps and N+1 calls",
+      "passed": true,
+      "detail": "124 runs, max calls 21"
+    },
+    {
+      "name": "REFLECTING visit formula matches simulation for N = 5, 9, 20",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "master test 2: invalid payloads return a 'Tool Execution Error' string and never raise",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 2 valid call returns an observation string the OBSERVING state can store",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 3 sentinel flags the third identical action; hash is SHA-256 hex",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "tripwire wiring: sentinel verdict halts the agent at its third ACTING visit (step 11 of 20)",
+      "passed": true,
+      "detail": "halted at step 11"
+    },
+    {
+      "name": "Part 4 pilot binds THIS file's Agent (not its embedded fallback)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 4 pilot escapes the nebula on this state machine within the budget",
+      "passed": true,
+      "detail": "steps 18, interventions 2"
+    },
+    {
+      "name": "Part 4 run leaves an auditable trace on the agent",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "model_check": {
+    "runs": 124,
+    "max_calls": 21,
+    "ok": true
+  }
+}

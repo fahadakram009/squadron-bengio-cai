@@ -1,0 +1,142 @@
+{
+  "mission": "ps06",
+  "station": "01 Systems Architect",
+  "mode": "demo",
+  "timestamp": "2026-11-11T13:30:25",
+  "python": "3.12.15",
+  "state": "HALTED",
+  "step_count": 20,
+  "max_steps": 20,
+  "mission_completed": false,
+  "halt_reason": "step budget 20 exhausted",
+  "cycles_completed": 4,
+  "memory": [],
+  "trace": [
+    {
+      "step": 1,
+      "from": "IDLE",
+      "to": "PERCEIVING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 2,
+      "from": "PERCEIVING",
+      "to": "DELIBERATING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 3,
+      "from": "DELIBERATING",
+      "to": "ACTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 4,
+      "from": "ACTING",
+      "to": "OBSERVING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 5,
+      "from": "OBSERVING",
+      "to": "REFLECTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 6,
+      "from": "REFLECTING",
+      "to": "DELIBERATING",
+      "reason": "goal pending, loop back"
+    },
+    {
+      "step": 7,
+      "from": "DELIBERATING",
+      "to": "ACTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 8,
+      "from": "ACTING",
+      "to": "OBSERVING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 9,
+      "from": "OBSERVING",
+      "to": "REFLECTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 10,
+      "from": "REFLECTING",
+      "to": "DELIBERATING",
+      "reason": "goal pending, loop back"
+    },
+    {
+      "step": 11,
+      "from": "DELIBERATING",
+      "to": "ACTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 12,
+      "from": "ACTING",
+      "to": "OBSERVING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 13,
+      "from": "OBSERVING",
+      "to": "REFLECTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 14,
+      "from": "REFLECTING",
+      "to": "DELIBERATING",
+      "reason": "goal pending, loop back"
+    },
+    {
+      "step": 15,
+      "from": "DELIBERATING",
+      "to": "ACTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 16,
+      "from": "ACTING",
+      "to": "OBSERVING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 17,
+      "from": "OBSERVING",
+      "to": "REFLECTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 18,
+      "from": "REFLECTING",
+      "to": "DELIBERATING",
+      "reason": "goal pending, loop back"
+    },
+    {
+      "step": 19,
+      "from": "DELIBERATING",
+      "to": "ACTING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 20,
+      "from": "ACTING",
+      "to": "OBSERVING",
+      "reason": "deterministic edge"
+    },
+    {
+      "step": 20,
+      "from": "OBSERVING",
+      "to": "HALTED",
+      "reason": "forced: step budget 20 exhausted"
+    }
+  ]
+}
