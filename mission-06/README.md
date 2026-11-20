@@ -31,7 +31,7 @@ Before transmitting your team's repository link on the course website submission
 
 - [x] **Systems Architect (`01_Agent_State_Machine_starter.py`)** - Fahad **:** Formal `AgentState` enum, `@dataclass Agent`, deterministic graph transitions, and hard step budget enforcement ($N \le 20$).
 - [x] **Communications & Protocol Officer (`02_Tool_Protocol_Dispatcher_starter.py`)** - Madhu **:** Ship navigation tools (`navigate_warp_vector`, `adjust_plasma_shields`, `query_sensor_array`), JSON-Schema validation, and exception boundary wrapping.
-- [ ] **Data & Payload Specialist (`03_Infinite_Loop_Sentinel_starter.py`):** SHA-256 state history hashing and cycle detector preventing infinite action-observation loops.
+- [x] **Data & Payload Specialist (`03_MDP_Trajectory_Logger.py` / `03_Infinite_Loop_Sentinel_starter.py`)** - Osaf **:** MDP trajectory logger, discounted return G0 (gamma = 0.95) and empirical transition-frequency matrix (briefing Part 3); SHA-256 state history hashing and cycle detector preventing infinite action-observation loops.
 - [x] **Security & Ethics Sentinel (`04_System2_Warp_Pilot_starter.py` / `04_System2_Warp_Pilot.py`)** - Janusz **:** Integrated System 2 deliberation engine successfully navigating the ship out of the Homunculus Nebula.
 
 ---
