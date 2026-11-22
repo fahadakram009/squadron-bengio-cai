@@ -1,0 +1,122 @@
+{
+  "mission": "ps07",
+  "station": "01 Systems Architect",
+  "mode": "harness",
+  "timestamp": "2026-11-22T15:09:05",
+  "python": "3.12.15",
+  "harness": {
+    "bfs": {
+      "expansions": 5,
+      "score": 0.85,
+      "trajectory": [
+        "Prompt: Synthesize 24.0 km/s from [4, 9, 10, 13]",
+        "Step 1A: 13 - 9 = 4 (Remaining: [4, 4, 10]) [VALID]",
+        "Step 2A: 10 - 4 = 6 (Remaining: [4, 6]) [OPTIMAL]",
+        "Step 3A: 4 * 6 = 24.0 km/s -> Escape Geodesic Locked! [GOAL]"
+      ]
+    },
+    "dfs": {
+      "expansions": 5,
+      "score": 0.85,
+      "trajectory": [
+        "Prompt: Synthesize 24.0 km/s from [4, 9, 10, 13]",
+        "Step 1A: 13 - 9 = 4 (Remaining: [4, 4, 10]) [VALID]",
+        "Step 2A: 10 - 4 = 6 (Remaining: [4, 6]) [OPTIMAL]",
+        "Step 3A: 4 * 6 = 24.0 km/s -> Escape Geodesic Locked! [GOAL]"
+      ],
+      "backtracks": 0
+    }
+  },
+  "short_benchmark": {
+    "n_puzzles": 20,
+    "budgets": [
+      48,
+      192
+    ],
+    "sigmas": [
+      0.5
+    ],
+    "rows": [
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 1,
+        "budget": 48,
+        "solve_rate": 0.2,
+        "mean_expansions": 42.15
+      },
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 1,
+        "budget": 192,
+        "solve_rate": 0.2,
+        "mean_expansions": 42.8
+      },
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 2,
+        "budget": 48,
+        "solve_rate": 0.05,
+        "mean_expansions": 47.6
+      },
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 2,
+        "budget": 192,
+        "solve_rate": 0.35,
+        "mean_expansions": 61.25
+      },
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 3,
+        "budget": 48,
+        "solve_rate": 0.0,
+        "mean_expansions": 48.0
+      },
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 3,
+        "budget": 192,
+        "solve_rate": 0.35,
+        "mean_expansions": 78.25
+      },
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 5,
+        "budget": 48,
+        "solve_rate": 0.0,
+        "mean_expansions": 48.0
+      },
+      {
+        "sigma": 0.5,
+        "mode": "bfs",
+        "beam_width": 5,
+        "budget": 192,
+        "solve_rate": 0.4,
+        "mean_expansions": 112.75
+      },
+      {
+        "sigma": 0.5,
+        "mode": "dfs",
+        "beam_width": 1,
+        "budget": 48,
+        "solve_rate": 0.45,
+        "mean_expansions": 45.15
+      },
+      {
+        "sigma": 0.5,
+        "mode": "dfs",
+        "beam_width": 1,
+        "budget": 192,
+        "solve_rate": 0.5,
+        "mean_expansions": 46.9
+      }
+    ]
+  }
+}

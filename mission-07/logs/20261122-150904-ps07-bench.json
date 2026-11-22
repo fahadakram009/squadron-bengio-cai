@@ -1,0 +1,531 @@
+{
+  "mission": "ps07",
+  "station": "01 Systems Architect",
+  "mode": "bench",
+  "timestamp": "2026-11-22T15:09:04",
+  "python": "3.12.15",
+  "n_puzzles": 40,
+  "budgets": [
+    48,
+    64,
+    96,
+    192
+  ],
+  "sigmas": [
+    0.0,
+    0.25,
+    0.5
+  ],
+  "rows": [
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 48,
+      "solve_rate": 0.85,
+      "mean_expansions": 42.625
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 64,
+      "solve_rate": 1.0,
+      "mean_expansions": 43.45
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 96,
+      "solve_rate": 1.0,
+      "mean_expansions": 43.45
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 43.45
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 48,
+      "solve_rate": 0.3,
+      "mean_expansions": 47.325
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 64,
+      "solve_rate": 0.85,
+      "mean_expansions": 58.425
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 96,
+      "solve_rate": 1.0,
+      "mean_expansions": 60.6
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 60.6
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 48,
+      "solve_rate": 0.05,
+      "mean_expansions": 47.45
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 64,
+      "solve_rate": 0.45,
+      "mean_expansions": 62.55
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 96,
+      "solve_rate": 1.0,
+      "mean_expansions": 76.55
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 76.55
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 48,
+      "solve_rate": 0.05,
+      "mean_expansions": 47.45
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 64,
+      "solve_rate": 0.275,
+      "mean_expansions": 62.575
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 96,
+      "solve_rate": 0.75,
+      "mean_expansions": 86.075
+    },
+    {
+      "sigma": 0.0,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 97.725
+    },
+    {
+      "sigma": 0.0,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 48,
+      "solve_rate": 0.85,
+      "mean_expansions": 42.625
+    },
+    {
+      "sigma": 0.0,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 64,
+      "solve_rate": 1.0,
+      "mean_expansions": 43.45
+    },
+    {
+      "sigma": 0.0,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 96,
+      "solve_rate": 1.0,
+      "mean_expansions": 43.45
+    },
+    {
+      "sigma": 0.0,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 43.45
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 48,
+      "solve_rate": 0.9,
+      "mean_expansions": 41.825
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 64,
+      "solve_rate": 1.0,
+      "mean_expansions": 42.45
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 96,
+      "solve_rate": 1.0,
+      "mean_expansions": 42.45
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 42.45
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 48,
+      "solve_rate": 0.325,
+      "mean_expansions": 47.775
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 64,
+      "solve_rate": 0.875,
+      "mean_expansions": 59.025
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 96,
+      "solve_rate": 0.975,
+      "mean_expansions": 61.025
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 192,
+      "solve_rate": 0.975,
+      "mean_expansions": 61.025
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 48,
+      "solve_rate": 0.05,
+      "mean_expansions": 48.0
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 64,
+      "solve_rate": 0.375,
+      "mean_expansions": 63.65
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 96,
+      "solve_rate": 0.975,
+      "mean_expansions": 78.675
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 192,
+      "solve_rate": 0.975,
+      "mean_expansions": 78.675
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 48,
+      "solve_rate": 0.0,
+      "mean_expansions": 48.0
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 64,
+      "solve_rate": 0.05,
+      "mean_expansions": 64.0
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 96,
+      "solve_rate": 0.55,
+      "mean_expansions": 94.625
+    },
+    {
+      "sigma": 0.25,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 114.525
+    },
+    {
+      "sigma": 0.25,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 48,
+      "solve_rate": 0.9,
+      "mean_expansions": 41.825
+    },
+    {
+      "sigma": 0.25,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 64,
+      "solve_rate": 1.0,
+      "mean_expansions": 42.45
+    },
+    {
+      "sigma": 0.25,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 96,
+      "solve_rate": 1.0,
+      "mean_expansions": 42.45
+    },
+    {
+      "sigma": 0.25,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 192,
+      "solve_rate": 1.0,
+      "mean_expansions": 42.45
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 48,
+      "solve_rate": 0.2,
+      "mean_expansions": 42.3
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 64,
+      "solve_rate": 0.2,
+      "mean_expansions": 42.925
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 96,
+      "solve_rate": 0.2,
+      "mean_expansions": 42.925
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 1,
+      "budget": 192,
+      "solve_rate": 0.2,
+      "mean_expansions": 42.925
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 48,
+      "solve_rate": 0.075,
+      "mean_expansions": 47.65
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 64,
+      "solve_rate": 0.3,
+      "mean_expansions": 59.35
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 96,
+      "solve_rate": 0.425,
+      "mean_expansions": 61.25
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 2,
+      "budget": 192,
+      "solve_rate": 0.425,
+      "mean_expansions": 61.25
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 48,
+      "solve_rate": 0.0,
+      "mean_expansions": 48.0
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 64,
+      "solve_rate": 0.125,
+      "mean_expansions": 63.8
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 96,
+      "solve_rate": 0.475,
+      "mean_expansions": 78.775
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 3,
+      "budget": 192,
+      "solve_rate": 0.475,
+      "mean_expansions": 78.775
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 48,
+      "solve_rate": 0.0,
+      "mean_expansions": 48.0
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 64,
+      "solve_rate": 0.0,
+      "mean_expansions": 64.0
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 96,
+      "solve_rate": 0.25,
+      "mean_expansions": 94.9
+    },
+    {
+      "sigma": 0.5,
+      "mode": "bfs",
+      "beam_width": 5,
+      "budget": 192,
+      "solve_rate": 0.475,
+      "mean_expansions": 114.225
+    },
+    {
+      "sigma": 0.5,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 48,
+      "solve_rate": 0.4,
+      "mean_expansions": 44.5
+    },
+    {
+      "sigma": 0.5,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 64,
+      "solve_rate": 0.475,
+      "mean_expansions": 46.95
+    },
+    {
+      "sigma": 0.5,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 96,
+      "solve_rate": 0.5,
+      "mean_expansions": 47.125
+    },
+    {
+      "sigma": 0.5,
+      "mode": "dfs",
+      "beam_width": 1,
+      "budget": 192,
+      "solve_rate": 0.5,
+      "mean_expansions": 47.125
+    }
+  ],
+  "cost_model": [
+    {
+      "beam_width": 1,
+      "expansions": 18,
+      "generated_tokens": 1080,
+      "kv_peak_tokens": 380,
+      "kv_relative": 1
+    },
+    {
+      "beam_width": 2,
+      "expansions": 30,
+      "generated_tokens": 1800,
+      "kv_peak_tokens": 760,
+      "kv_relative": 2
+    },
+    {
+      "beam_width": 3,
+      "expansions": 42,
+      "generated_tokens": 2520,
+      "kv_peak_tokens": 1140,
+      "kv_relative": 3
+    },
+    {
+      "beam_width": 5,
+      "expansions": 66,
+      "generated_tokens": 3960,
+      "kv_peak_tokens": 1900,
+      "kv_relative": 5
+    }
+  ]
+}

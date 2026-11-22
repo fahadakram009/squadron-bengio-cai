@@ -1,0 +1,206 @@
+{
+  "mission": "ps07",
+  "station": "01 Systems Architect",
+  "mode": "selftest",
+  "timestamp": "2026-11-22T15:09:01",
+  "python": "3.12.15",
+  "passed": 39,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "get_trajectory reconstructs root -> ... -> node",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "min reduction: cumulative is the weakest link",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "prod reduction: cumulative is the joint validity",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "scored trajectory carries step scores",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "starter defaults kept (16 expansions, beam 2, threshold 0.45, min)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "invalid beam width / budget / threshold / reduction are refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "instructor mock: ToT-BFS reaches [GOAL] within 12 expansions",
+      "passed": true,
+      "detail": "5 expansions, score 0.85"
+    },
+    {
+      "name": "instructor mock: ToT-DFS reaches [GOAL] within 12 expansions",
+      "passed": true,
+      "detail": "5 expansions"
+    },
+    {
+      "name": "instructor mock: min-link score of the winning chain is 0.85",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "budget: expansions never exceed max_expansions for budgets 0..11, both searches; tree size equals expansions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "budget 0 returns the root untouched",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "beam width: at most B nodes kept per depth for B = 1, 2, 3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "max_depth: no node deeper than the limit",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "pruning: children below the threshold are attached, flagged, never expanded, and counted",
+      "passed": true,
+      "detail": "1 pruned"
+    },
+    {
+      "name": "beam B = 1 is greedy and dies under the tempting branch (depth 2), B = 2 reaches the goal (depth 3)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "DFS follows A then A1 first, backtracks, and finds start -> B -> B1 -> B1-final",
+      "passed": true,
+      "detail": "3 backtracks"
+    },
+    {
+      "name": "DFS needs no more expansions than BFS B = 2 on the toy graph",
+      "passed": true,
+      "detail": "10 vs 10"
+    },
+    {
+      "name": "determinism: two identical runs give identical trajectories and events",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "a root with no candidates returns the root with zero expansions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "stats() and events are JSON serialisable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "oracle: [4, 9, 10, 13] is solvable, [1, 1, 1, 1] is not",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "generator: every step leaves one number fewer and results are deduplicated",
+      "passed": true,
+      "detail": "30 candidates"
+    },
+    {
+      "name": "exact evaluator: a step that keeps 24 reachable scores 0.9, one that does not scores 0.2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "exact evaluator: BFS B = 2 solves [4, 9, 10, 13] and the last thought is a [GOAL] step",
+      "passed": true,
+      "detail": "10 - 4 = 6 (left: [6, 9, 13]) -> 13 - 9 = 4 (left: [4, 6]) -> 4 * 6 = 24 (left: [24]) [GOAL]"
+    },
+    {
+      "name": "exact evaluator: DFS solves it with fewer expansions than BFS B = 2",
+      "passed": true,
+      "detail": "50 vs 70"
+    },
+    {
+      "name": "noisy evaluator is deterministic for the same thought",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "40 distinct solvable puzzles generated deterministically",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "exact evaluator, budget 192: BFS B = 2 and DFS solve every puzzle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "solve rate never decreases with budget (every config, every noise level)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "mild noise (0.25), budget 48: the greedy beam is best when compute is scarce",
+      "passed": true,
+      "detail": "B=1 0.90"
+    },
+    {
+      "name": "strong noise (0.5), budget 192: a wider beam beats the greedy beam (B = 3 > B = 1)",
+      "passed": true,
+      "detail": "B=3 0.47 vs B=1 0.20"
+    },
+    {
+      "name": "strong noise (0.5), budget 48: DFS backtracking is the most budget-efficient search",
+      "passed": true,
+      "detail": "DFS 0.40"
+    },
+    {
+      "name": "expansions spent grow with beam width at a fixed large budget",
+      "passed": true,
+      "detail": "B=1: 43, B=2: 61, B=3: 79, B=5: 114"
+    },
+    {
+      "name": "cost model: generated tokens grow with B and peak KV cache is B times the single-context cache",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 3 PRM as evaluator: both flawed branches are pruned at their first bad step and the clean proof wins",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 3 reductions agree with the tree's min-link score on the winning chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 4 pruner: the Game-of-24 winning trajectory survives the event horizon unsevered",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 4 pruner: a sycophantic rewrite of step 2 is penalized and severed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 2 MCTS engine present with puct_score, select_leaf, expand, simulate_rollout, backpropagate",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}

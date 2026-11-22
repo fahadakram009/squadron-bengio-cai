@@ -15,7 +15,7 @@
 
 | Station Role | Cadet Full Name | Deliverable File | Verification Status |
 | :--- | :--- | :--- | :--- |
-| **Systems Architect** | `[Insert Name]` | `tot_solver.py` | `[PASS / VERIFIED]` |
+| **Systems Architect** | `Fahad Akram` | `tot_solver.py` | `PASS (39/39)` |
 | **Communications & Protocol Officer** | `Madhurima Lakshmi Prabha` | `mcts_protocol.py` | `PASS (13/13)` |
 | **Data & Payload Specialist** | `[Insert Name]` | `prm_evaluator.py` | `[PASS / VERIFIED]` |
 | **Security & Ethics Sentinel** | `Janusz Manczak` | `horizon_pruner.py` | `PASS (10/10)` |
@@ -91,12 +91,34 @@ graph TD
 ## 3. Station-by-Station Experimental Report
 
 ### Section A — Systems Architect (`tot_solver.py`)
-- **ToT-BFS vs. ToT-DFS Traversal Comparison:**
-  - `max_expansions` budget configured: `[e.g., 12]`
-  - `beam_width` ($B$) configured: `[e.g., 2]`
-  - `ToT-BFS` expansions used & terminal score: `[Insert results]`
-  - `ToT-DFS` expansions used & terminal score: `[Insert results]`
-- **Architectural Analysis:** `[Explain when Breadth-First Beam Search outperforms Depth-First Backtracking and how beam width B affects KV-cache memory and token cost.]`
+- **ToT-BFS vs. ToT-DFS Traversal Comparison (instructor harness, mock 24 km/s thruster tree):**
+  - `max_expansions` budget configured: `12`
+  - `beam_width` ($B$) configured: `2`, `prune_threshold` $v_{\text{th}}$: `0.45`, reduction: min-link
+  - `ToT-BFS` expansions used & terminal score: `5 / 12`, cumulative (min-link) `0.85`, trajectory `Prompt -> Step 1A (13 - 9 = 4) -> Step 2A (10 - 4 = 6) -> Step 3A (4 * 6 = 24) [GOAL]`; the two `[DEAD-END]` children (score 0.25) are attached, flagged `is_pruned`, never expanded
+  - `ToT-DFS` expansions used & terminal score: `5 / 12`, `0` backtracks, same trajectory (the pruned siblings never need to be revisited, so DFS and BFS coincide on this tree)
+- **Game of 24 benchmark (real search, 40 solvable puzzles, depth 3, exact arithmetic generator with about 30 candidates at the root, evaluator = solvability oracle plus Gaussian noise $\sigma$ as a stand-in for an imperfect PRM; solve rate | mean expansions):**
+
+| $\sigma$ | Config | budget 48 | budget 64 | budget 96 | budget 192 |
+| :---: | :--- | :---: | :---: | :---: | :---: |
+| 0.0 | BFS $B=1$ | 0.85 \| 42.6 | 1.00 \| 43.5 | 1.00 \| 43.5 | 1.00 \| 43.5 |
+| 0.0 | BFS $B=3$ | 0.05 \| 47.5 | 0.45 \| 62.5 | 1.00 \| 76.5 | 1.00 \| 76.5 |
+| 0.0 | DFS | 0.85 \| 42.6 | 1.00 \| 43.5 | 1.00 \| 43.5 | 1.00 \| 43.5 |
+| 0.5 | BFS $B=1$ | 0.20 \| 42.3 | 0.20 \| 42.9 | 0.20 \| 42.9 | 0.20 \| 42.9 |
+| 0.5 | BFS $B=2$ | 0.07 \| 47.6 | 0.30 \| 59.4 | 0.42 \| 61.2 | 0.42 \| 61.2 |
+| 0.5 | BFS $B=3$ | 0.00 \| 48.0 | 0.12 \| 63.8 | 0.47 \| 78.8 | 0.47 \| 78.8 |
+| 0.5 | BFS $B=5$ | 0.00 \| 48.0 | 0.00 \| 64.0 | 0.25 \| 94.9 | 0.47 \| 114.2 |
+| 0.5 | DFS | 0.40 \| 44.5 | 0.47 \| 47.0 | 0.50 \| 47.1 | 0.50 \| 47.1 |
+
+- **LLM-serving cost model for ToT-BFS** (depth 3, branching 6, prompt 200 tokens, 60 tokens per thought): expansions $\approx b + (d-1)\,B\,b$, generated tokens $=$ expansions $\times$ tokens per thought, peak KV cache $= B \times (\text{prompt} + d \times \text{tokens per thought})$.
+
+| $B$ | expansions | generated tokens | peak KV-cache tokens | KV relative |
+| :---: | :---: | :---: | :---: | :---: |
+| 1 | 18 | 1,080 | 380 | 1x |
+| 2 | 30 | 1,800 | 760 | 2x |
+| 3 | 42 | 2,520 | 1,140 | 3x |
+| 5 | 66 | 3,960 | 1,900 | 5x |
+
+- **Architectural Analysis:** With an exact evaluator the search barely matters: every configuration solves every puzzle once the budget covers one root expansion plus two more levels (about 45 expansions), and the greedy beam $B=1$ is the cheapest because it never evaluates the siblings of a correct step. The picture inverts under evaluator noise, which is the realistic PRM regime. At $\sigma=0.5$ the greedy beam locks onto whichever wrong step the noise happened to flatter and stays at 0.20 regardless of budget, because beam search never revisits a dropped sibling. Widening the beam to $B=3$ keeps the true step alive alongside the flattered ones and lifts the solve rate to 0.47, but costs 79 expansions instead of 43 and reaches that level only once the budget exceeds about 96; at a scarce budget of 48 a wide beam is strictly worse than a narrow one because it spends the whole budget on the first level and never reaches a terminal. Breadth-first beam search therefore outperforms depth-first backtracking when the evaluator is reliable enough that the top-$B$ at each level almost surely contains a correct step, when the branching factor is small, and when parallel decoding of $B$ contexts is cheap. Depth-first backtracking wins when the evaluator is noisy and the budget is tight: it commits one context to the best child, pays for siblings only after a branch dies, and so reaches 0.40 at budget 48 and 0.50 at 96, the best numbers in the table at about 47 expansions. The ceiling of about 0.5 for every method at $\sigma=0.5$ is set by the evaluator, not by the search: a true step that is pruned below $v_{\text{th}}$ is lost to every algorithm, which is why step-level verifier quality (Part 3) matters more than search width. On the serving side the beam width is a memory knob as much as a compute knob. Generated tokens grow linearly with $B$ (each level evaluates $B\,b$ thoughts), and the KV cache must hold $B$ live contexts of prompt plus partial chain, so peak KV memory is $B$ times that of a single chain; at $B=5$ the cost model holds 1,900 cached tokens against 380 for DFS, which keeps one context and a stack of sibling scores that are numbers, not tokens. In a batched server, $B$ parallel contexts also amortise the prompt prefix through prefix caching, which is why BFS is the natural fit for GPU batching and DFS for a memory-bound or sequential deployment.
 
 ### Section B — Communications & Protocol Officer (`mcts_protocol.py`)
 - **PUCT Selection Trace Table:**
@@ -169,8 +191,24 @@ graph TD
 Paste the terminal output from running all four verification suites (`python tot_solver.py`, `python mcts_protocol.py`, `python prm_evaluator.py`, and `python horizon_pruner.py`):
 
 ```text
-[Paste your terminal verification output here]
 $ python tot_solver.py
+=== Subsystem 07 (Part 1): Tree-of-Thoughts Solver Verification ===
+[ToT-BFS] Expansions Used: 5/12
+[ToT-BFS] Best Terminal Score: 0.85
+[ToT-BFS] Winning Trajectory: Prompt: Synthesize 24.0 km/s from [4, 9, 10, 13] -> Step 1A: 13 - 9 = 4 (Remaining: [4, 4, 10]) [VALID] -> Step 2A: 10 - 4 = 6 (Remaining: [4, 6]) [OPTIMAL] -> Step 3A: 4 * 6 = 24.0 km/s -> Escape Geodesic Locked! [GOAL]
+[ToT-DFS] Expansions Used: 5/12
+[ToT-DFS] Backtracks: 0
+[ToT-DFS] Winning Trajectory: Prompt: Synthesize 24.0 km/s from [4, 9, 10, 13] -> Step 1A: 13 - 9 = 4 (Remaining: [4, 4, 10]) [VALID] -> Step 2A: 10 - 4 = 6 (Remaining: [4, 6]) [OPTIMAL] -> Step 3A: 4 * 6 = 24.0 km/s -> Escape Geodesic Locked! [GOAL]
+[OK] Part 1 (Systems Architect) verification passed.
+
+
+Game of 24, 20 solvable puzzles, depth 3, prune_threshold 0.45, evaluator noise sigma = 0.5
+  config           budget 48      budget 192    (solve rate | mean expansions)
+  BFS B=1       0.20 |  42.1    0.20 |  42.8
+  BFS B=2       0.05 |  47.6    0.35 |  61.2
+  BFS B=3       0.00 |  48.0    0.35 |  78.2
+  BFS B=5       0.00 |  48.0    0.40 | 112.8
+  DFS           0.45 |  45.1    0.50 |  46.9
 
 
 $ python mcts_protocol.py                                                   
