@@ -16,7 +16,7 @@
 | Station Role | Cadet Full Name | Deliverable File | Verification Status |
 | :--- | :--- | :--- | :--- |
 | **Systems Architect** | `[Insert Name]` | `tot_solver.py` | `[PASS / VERIFIED]` |
-| **Communications & Protocol Officer** | `[Insert Name]` | `mcts_protocol.py` | `[PASS / VERIFIED]` |
+| **Communications & Protocol Officer** | `Madhurima Lakshmi Prabha` | `mcts_protocol.py` | `[PASS (13/13)]` |
 | **Data & Payload Specialist** | `[Insert Name]` | `prm_evaluator.py` | `[PASS / VERIFIED]` |
 | **Security & Ethics Sentinel** | `[Insert Name]` | `horizon_pruner.py` | `[PASS / VERIFIED]` |
 
