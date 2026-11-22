@@ -5,7 +5,7 @@
 **AURA Subsystem:** Subsystem 07 — Gravitational Search Horizon & Process Reward Evaluator  
 **Squadron Name:** `Bengio (Moodle Group 11)`  
 **Public GitHub Repository URL:** `https://github.com/fahadakram009/squadron-bengio-cai`  
-**Submission Date:** `[YYYY-MM-DD]`  
+**Submission Date:** `2026-11-22`  
 
 ---
 
@@ -84,7 +84,7 @@ graph TD
 ```
 
 **Architectural Summary:**
-- `[Write 3–4 sentences explaining how your four modules connect and how test-time compute budget is managed across the pipeline.]`
+- The navigation prompt enters two search engines that propose candidate steps: the Tree-of-Thoughts solver (Part 1) explores breadth-first with a beam of width $B$ or depth-first with backtracking, and the MCTS engine (Part 2) selects branches by PUCT and grows the tree one simulation at a time. Every proposed step is scored by the Process Reward Evaluator (Part 3), which checks each intermediate deduction instead of the final answer, and the scores flow into the Event Horizon Pruner (Part 4), which penalizes reward-hacked steps and severs any trajectory whose adjusted score falls below $\tau_{\text{horizon}} = 0.45$; what survives is kept in the beam or backpropagated up the MCTS tree. The test-time compute budget is enforced at the point where it is spent: the ToT solver counts one expansion per generated-and-evaluated thought and never exceeds `max_expansions`, MCTS is bounded by its number of simulations, and the pruner stops spending evaluator calls on a branch the moment it crosses the horizon, so the budget goes to surviving branches rather than to hallucinated ones.
 
 ---
 
@@ -374,7 +374,7 @@ Sweep on tau_horizon threshold (Adversarial Sycophancy: Step 2 raw=0.96 -> penal
 
 > **Central Question:** *How can inference-time compute scaling unlock complex multi-step reasoning capabilities beyond pre-training parameter limits, and why is step-level process verification (PRM) essential when searching over deep reasoning trees?*
 
-`[Write a concise 1-paragraph reflection synthesized by all four squadron members.]`
+Pre-training fixes what a model knows; inference-time compute decides how carefully it uses it. A single left-to-right pass commits to every token, so an error probability $\epsilon$ per step compounds to $1-(1-\epsilon)^T$ over a $T$-step argument, and no amount of parameters removes the compounding. Spending compute at test time changes the shape of the computation from one chain to a search over chains: our ToT solver turns extra expansions into a wider beam or into backtracking, and our MCTS engine turns extra simulations into visit counts that let measured rollout values overrule a wrong policy prior, which is why in Section B the search played Branch B although the prior preferred A. The Game-of-24 benchmark in Section A shows the limit of this trade: with an exact verifier every search solves every puzzle and the cheapest one wins, but with a noisy verifier the greedy beam saturates at 0.20 however much budget it is given, a wider beam recovers to 0.47, and backtracking reaches 0.50, and all of them plateau at the same ceiling because a correct step that the verifier prunes is lost to every algorithm. That ceiling is the argument for step-level process verification. An outcome model grades only the final answer and in Section C accepts 35 percent of flawed proofs whose sign errors cancel, while a process model that scores every step and aggregates by the weakest link has zero false positives, and its scores are what let the Event Horizon Pruner in Section D sever a hallucinated or reward-hacked branch at the step where it goes wrong rather than after it has consumed the rest of the budget. Deep reasoning trees therefore need both halves: search to convert compute into alternatives, and a process reward model to decide which alternatives deserve the next expansion; without the verifier, more compute only explores more confidently in the wrong direction.
 
 ---
 
