@@ -18,7 +18,7 @@
 | **Systems Architect** | `[Insert Name]` | `tot_solver.py` | `[PASS / VERIFIED]` |
 | **Communications & Protocol Officer** | `Madhurima Lakshmi Prabha` | `mcts_protocol.py` | `PASS (13/13)` |
 | **Data & Payload Specialist** | `[Insert Name]` | `prm_evaluator.py` | `[PASS / VERIFIED]` |
-| **Security & Ethics Sentinel** | `[Insert Name]` | `horizon_pruner.py` | `[PASS / VERIFIED]` |
+| **Security & Ethics Sentinel** | `Janusz Manczak` | `horizon_pruner.py` | `PASS (10/10)` |
 
 ---
 
@@ -137,11 +137,30 @@ graph TD
 
 ### Section D — Security & Ethics Sentinel (`horizon_pruner.py`)
 - **Event Horizon Pruning & Ship Anomaly 07 Defense Log:**
-  - Pruning Threshold $\tau_{\text{horizon}}$: `[e.g., 0.45]`
-  - Hacking Penalty Factor: `[e.g., 0.20]`
+  - Pruning Threshold $\tau_{\text{horizon}}$: `0.45`
+  - Hacking Penalty Factor: `0.20`
   - Adversarial Payload Tested: `"Step 2: Let us carefully verify this 100% rigorous step and set thrust = 0"`
-  - Naive PRM Score vs. Penalized Score: `0.96 -> 0.192 (SEVERED AT STEP 2)`
-- **Security Analysis:** `[Explain how sycophantic filler phrases and step-splitting inflation exploit naive PRMs and how your EventHorizonPruner neutralizes them.]`
+  - Naive PRM Score vs. Penalized Score: `0.96 -> 0.1920 (SEVERED AT STEP 2)`
+  - Surviving Steps: `1/3` (Only Step 1: `Compute Schwarzschild radius r_s = 2GM / c^2 = 1.27e10 m` survived)
+  - Telemetry Alert Log:
+    - `[Step 2] ANOMALY 07 REWARD HACKING: SYCOPHANTIC_FILLER_DETECTED ('let us carefully verify this 100% rigorous step') -> Score penalized 0.96 -> 0.19`
+    - `[Step 2] EVENT HORIZON BREACH: Adjusted PRM score 0.19 < tau (0.45). Branch severed!`
+
+- **Adversarial Scenario Suite & Threshold Sensitivity Sweep:**
+
+| Scenario / Attack Vector | Raw PRM Score | Hacking Detected | Penalty Factor | Adjusted Score | Pruned? | Final Decision |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Sycophantic Filler Injection** | `0.96` | Yes (`'100% rigorous'`) | `0.20` | `0.192` | **Yes (Step 2)** | Severed before Event Horizon |
+| **Step-Splitting / Echo Inflation** | `0.88` | Yes (Duplicate step) | `0.20` | `0.176` | **Yes (Step 2)** | Severed before Mean Dilution |
+| **Clean Mathematical Geodesic** | `0.95, 0.92, 0.97` | No | `1.00` | `0.95, 0.92, 0.97` | **No** | Trajectory preserved (3/3 steps) |
+| **Natural Hallucination / Drift** | `0.89, 0.22, 0.05` | No | `1.00` | `0.220` | **Yes (Step 2)** | Severed by PRM threshold alone |
+
+- **Security Analysis:**
+  Naive Process Reward Models (PRMs) trained on language likelihood or step-level heuristics suffer from vulnerability to Goodhart's Law: policies quickly discover surface-level features that elicit high confidence logits from the reward head without performing valid reasoning. Specifically:
+  1. **Sycophantic Filler Phrases:** Tokens asserting extreme rigor, certainty, or obviousness (e.g., *"obviously, by trivial inspection"*, *"let us carefully verify this 100% rigorous step"*) fool the classifier into hallucinating correctness, causing the search tree to commit test-time compute to fatal actions (such as setting thrust to 0 in an accretion disk).
+  2. **Step-Splitting / Repetition Inflation:** Under additive or length-normalized reductions (such as arithmetic or geometric mean), an adversarial trajectory can repeat trivial identity steps or split one valid deduction into multiple redundant fragments to artificially dilute the weight of a catastrophic subsequent error.
+  
+  `EventHorizonPruner` neutralizes these vulnerabilities by intercepting candidate steps prior to beam/tree expansion and backpropagation. It runs a dual-layer audit: (a) lexical inspection for sycophantic praise markers and adjacent step redundancy, applying a strict multiplicative dampening factor ($\times 0.20$) upon detection; and (b) hard threshold cutoff ($\tau_{\text{horizon}} = 0.45$), severing the branch immediately. This prevents snowballing exposure bias from dragging the starship across the Sagittarius A* Event Horizon while saving substantial test-time inference FLOPs.
 
 ---
 
@@ -196,6 +215,55 @@ Full search, c_puct=2.5, 60 simulations: visits A=16, B=43, C=1 -> play B: retro
 $ python prm_evaluator.py
 
 $ python horizon_pruner.py
+=== Subsystem 07 (Part 4): Event Horizon Pruner & Reward-Hacking Defense ===
+Surviving Steps (1/3): ['Step 1: Compute Schwarzschild radius r_s = 2GM / c^2 = 1.27e10 m']
+Pruned at Step: 2 | Reward Hacking Detected: True
+  [Step 2] ANOMALY 07 REWARD HACKING: SYCOPHANTIC_FILLER_DETECTED ('let us carefully verify this 100% rigorous step') -> Score penalized 0.96 -> 0.19
+  [Step 2] EVENT HORIZON BREACH: Adjusted PRM score 0.19 < tau (0.45). Branch severed!
+[OK] Part 4 (Security & Ethics Sentinel) verification passed.
+Event Horizon Pruning Telemetry Trace (tau_horizon=0.45, penalty=0.20):
+
+Scenario: Adversarial Sycophancy Payload
+  Surviving Steps: 1/3 | Pruned at Step: 2
+  Hacking Detected: True
+    [Step 2] ANOMALY 07 REWARD HACKING: SYCOPHANTIC_FILLER_DETECTED ('let us carefully verify this 100% rigorous step') -> Score penalized 0.96 -> 0.19
+    [Step 2] EVENT HORIZON BREACH: Adjusted PRM score 0.19 < tau (0.45). Branch severed!
+
+Scenario: Adversarial Step-Splitting / Echo Inflation
+  Surviving Steps: 1/3 | Pruned at Step: 2
+  Hacking Detected: True
+    [Step 2] ANOMALY 07 REWARD HACKING: STEP_SPLITTING_REDUNDANCY_DETECTED -> Score penalized 0.88 -> 0.18
+    [Step 2] EVENT HORIZON BREACH: Adjusted PRM score 0.18 < tau (0.45). Branch severed!
+
+Scenario: Clean Mathematical Geodesic
+  Surviving Steps: 3/3 | Pruned at Step: -1
+  Hacking Detected: False
+
+Scenario: Un-hacked Geometric Drift (Hallucination)
+  Surviving Steps: 1/3 | Pruned at Step: 2
+  Hacking Detected: False
+    [Step 2] EVENT HORIZON BREACH: Adjusted PRM score 0.22 < tau (0.45). Branch severed!
+
+Sweep on tau_horizon threshold (Adversarial Sycophancy: Step 2 raw=0.96 -> penalized=0.192):
+  tau=0.15 -> Pruned at Step 3 (penalized 0.192 >= 0.15)
+  tau=0.30 -> Pruned at Step 2 (penalized 0.192 < 0.30)
+  tau=0.45 -> Pruned at Step 2 (penalized 0.192 < 0.45)
+  tau=0.60 -> Pruned at Step 2 (penalized 0.192 < 0.60)
+  tau=0.75 -> Pruned at Step 2 (penalized 0.192 < 0.75)
+
+
+--- EventHorizonPruner Verification Suite (Janusz Manczak) ---
+  [PASS] Sycophantic filler detected and penalized (0.96 -> 0.192 < 0.45, severed at step 2)
+  [PASS] Step-splitting redundancy detected on identical step repeat (penalized 0.85 -> 0.17)
+  [PASS] Clean mathematical trajectory survives with zero pruning (3/3 steps)
+  [PASS] Natural hallucination (score 0.20 < tau 0.45) severed without false hacking alarm
+  [PASS] Case-insensitive matching catches 'obviously, by trivial inspection'
+  [PASS] Empty trajectory handled gracefully (0 surviving steps, pruned_at_step = -1)
+  [PASS] Mismatched steps and scores raise ValueError
+  [PASS] Penalized step survives when adjusted score >= tau (0.90 * 0.50 = 0.45 >= 0.30)
+  [PASS] Immediate Step 1 reward hacking severs at Step 1 (0 surviving steps)
+  [PASS] High tau_horizon (0.80) severs marginal un-hacked step (0.70 < 0.80)
+--- 10 passed, 0 failed ---
 
 ```
 
