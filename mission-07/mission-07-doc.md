@@ -3,8 +3,8 @@
 **Course:** Conversational AI (WS 2026/27) — Week 7: Test-Time Compute & Reasoning Search Paradigms  
 **Sector Waypoint:** `SEC-07-SGR` (Sagittarius A* Supermassive Black Hole)  
 **AURA Subsystem:** Subsystem 07 — Gravitational Search Horizon & Process Reward Evaluator  
-**Squadron Name:** `[Insert Squadron / Team Name]`  
-**Public GitHub Repository URL:** `[Insert https://github.com/<your-org>/<your-repo>]`  
+**Squadron Name:** `Bengio (Moodle Group 11)`  
+**Public GitHub Repository URL:** `https://github.com/fahadakram009/squadron-bengio-cai`  
 **Submission Date:** `[YYYY-MM-DD]`  
 
 ---
@@ -16,7 +16,7 @@
 | Station Role | Cadet Full Name | Deliverable File | Verification Status |
 | :--- | :--- | :--- | :--- |
 | **Systems Architect** | `[Insert Name]` | `tot_solver.py` | `[PASS / VERIFIED]` |
-| **Communications & Protocol Officer** | `Madhurima Lakshmi Prabha` | `mcts_protocol.py` | `[PASS (13/13)]` |
+| **Communications & Protocol Officer** | `Madhurima Lakshmi Prabha` | `mcts_protocol.py` | `PASS (13/13)` |
 | **Data & Payload Specialist** | `[Insert Name]` | `prm_evaluator.py` | `[PASS / VERIFIED]` |
 | **Security & Ethics Sentinel** | `[Insert Name]` | `horizon_pruner.py` | `[PASS / VERIFIED]` |
 
@@ -106,7 +106,24 @@ graph TD
 | **Branch A** | `0.75` | `0.50` | `16` | `5` | `0.5000` | `1.2500` | No |
 | **Branch B** | `0.55` | `0.40` | `16` | `1` | `1.2000` | `1.7500` | **Yes** |
 
-- **Protocol Analysis:** `[Explain how changing c_puct from 0.5 to 2.5 shifts the balance between exploiting high-Q branches and exploring high-prior unvisited thoughts.]`
+- **Effect of $c_{\text{puct}}$ on the same two branches:**
+
+| $c_{\text{puct}}$ | PUCT(A) | PUCT(B) | Selected |
+| :---: | :---: | :---: | :---: |
+| 0.4 | 0.8833 | 0.8700 | A |
+| 0.5 | 0.9167 | 0.9500 | B |
+| 1.5 | 1.2500 | 1.7500 | B |
+| 2.5 | 1.5833 | 2.5500 | B |
+
+- **Full search (60 simulations, policy prior favours A = 0.6 over B = 0.3, but B leads to the higher rollout value):**
+
+| $c_{\text{puct}}$ | Visits A | Visits B | Visits C | Move played |
+| :---: | :---: | :---: | :---: | :---: |
+| 0.5 | 8 | 52 | 0 | B |
+| 1.5 | 10 | 49 | 1 | B |
+| 2.5 | 16 | 43 | 1 | B |
+
+- **Protocol Analysis:** The exploration bonus is $U = c_{\text{puct}} \cdot P \cdot \sqrt{N(s)}/(1+N(s,a))$, so $c_{\text{puct}}$ only scales how much an unvisited, high-prior branch is worth compared with its measured value $Q$. With the trace above, Branch A has the better $Q$ (0.75 vs 0.55) but Branch B has only been visited once, so its bonus is $0.8\,c_{\text{puct}}$ against $0.33\,c_{\text{puct}}$ for A. Branch B therefore wins as soon as $c_{\text{puct}} > 0.2/(0.8-0.333) \approx 0.43$; at 0.5 the gap is small (0.95 vs 0.92), at 2.5 it is large (2.55 vs 1.58) and the score is driven almost entirely by the prior and the visit counts rather than by $Q$. In the full search, a low $c_{\text{puct}}$ (0.5) spends 52 of 60 simulations on the best branch, which is efficient but risky if the early rollouts are noisy. A high $c_{\text{puct}}$ (2.5) spreads visits (A gets 16, even the "direct plunge" branch C is tried once), so it costs more compute but is less likely to lock onto a wrong branch. Because the final move is chosen by visit count, all three settings still play B here, even though the policy prior preferred A. This is the point of using search at test time: rollout values can overrule a bad first guess from the model.
 
 ### Section C — Data & Payload Specialist (`prm_evaluator.py`)
 - **Empirical Comparison: Outcome Reward Model (ORM) vs. Process Reward Model (PRM):**
@@ -134,6 +151,52 @@ Paste the terminal output from running all four verification suites (`python tot
 
 ```text
 [Paste your terminal verification output here]
+$ python tot_solver.py
+
+
+$ python mcts_protocol.py                                                   
+=== Subsystem 07 (Part 2): MCTS & PUCT Protocol Verification ===
+Branch A -> Q=0.75, N=5, P=0.50 | PUCT = 1.2500
+Branch B -> Q=0.55, N=1, P=0.40 | PUCT = 1.7500
+Selected Next Node for Expansion: Branch B: Retrograde Penrose Extraction
+[OK] Part 2 (Communications & Protocol Officer) verification passed.
+
+PUCT trace (c_puct = 1.5):
+  Branch A: Q=0.75 P=0.50 N(s)=16 N(s,a)=5 U=0.5000 PUCT=1.2500
+  Branch B: Q=0.55 P=0.40 N(s)=16 N(s,a)=1 U=1.2000 PUCT=1.7500
+
+c_puct sweep on Branch A / Branch B (doc Section B):
+  c_puct=0.4  PUCT(A)=0.8833 PUCT(B)=0.8700 -> A
+  c_puct=0.5  PUCT(A)=0.9167 PUCT(B)=0.9500 -> B
+  c_puct=1.0  PUCT(A)=1.0833 PUCT(B)=1.3500 -> B
+  c_puct=1.5  PUCT(A)=1.2500 PUCT(B)=1.7500 -> B
+  c_puct=2.5  PUCT(A)=1.5833 PUCT(B)=2.5500 -> B
+  B overtakes A above c_puct = 0.2 / (0.8 - 1/3) = 0.4286
+
+Full search, c_puct=0.5, 60 simulations: visits A=8, B=52, C=0 -> play B: retrograde Penrose extraction
+Full search, c_puct=1.5, 60 simulations: visits A=10, B=49, C=1 -> play B: retrograde Penrose extraction
+Full search, c_puct=2.5, 60 simulations: visits A=16, B=43, C=1 -> play B: retrograde Penrose extraction
+
+  [PASS] PUCT(A) = 0.75 + 1.5*0.50*4/6 = 1.25
+  [PASS] PUCT(B) = 0.55 + 1.5*0.40*4/2 = 1.75
+  [PASS] under-explored Branch B is selected
+  [PASS] backpropagate: N(B) 1->2, N(root) 16->17, W(B) = 0.55+0.95
+  [PASS] unvisited child: Q = 0 and N(s) counts as 1 -> PUCT = 1.5*0.4
+  [PASS] c_puct 0.4 picks A (exploit), 0.5 / 1.5 / 2.5 pick B (explore)
+  [PASS] expand: one child per pair, with its prior and parent
+  [PASS] second expand adds only the new step (no duplicate 'x')
+  [PASS] terminal node is not expanded, negative prior rejected
+  [PASS] rollout clamped to [0, 1], NaN -> 0.0
+  [PASS] select_leaf stops at a terminal node
+  [PASS] search with no possible moves gives a clear error
+  [PASS] full search: 60 simulations, picks B over the higher-prior A
+--- 13 passed, 0 failed ---
+
+
+$ python prm_evaluator.py
+
+$ python horizon_pruner.py
+
 ```
 
 ---

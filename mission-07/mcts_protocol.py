@@ -238,6 +238,13 @@ def run_tests() -> int:
 
 def report() -> None:
     root, a, b = trace_tree()
+    engine = MCTSEngine(c_puct=1.5)
+    print("PUCT trace (c_puct = 1.5):")
+    for name, n in (("A", a), ("B", b)):
+        puct = engine.puct_score(root, n)
+        print(f"  Branch {name}: Q={n.q_value:.2f} P={n.prior_prob:.2f} N(s)={root.visit_count} "
+              f"N(s,a)={n.visit_count} U={puct - n.q_value:.4f} PUCT={puct:.4f}")
+    print()
     print("c_puct sweep on Branch A / Branch B (doc Section B):")
     for c in (0.4, 0.5, 1.0, 1.5, 2.5):
         e = MCTSEngine(c)
