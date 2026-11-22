@@ -33,7 +33,7 @@ Before compiling your final documentation and submitting to Moodle, ensure all f
 
 - [x] **Part 1 — Systems Architect (`tot_solver.py`)** - Fahad **:** Implement `ThoughtNode` and `TreeOfThoughtsSolver` supporting both Breadth-First Beam Search (`bfs_beam_search`, maintaining beam width $B$) and Depth-First Backtracking Search (`dfs_backtrack_search`, pruning below threshold $v_{\text{th}}$) under a hard node-expansion compute budget `max_expansions`.
 - [x] **Part 2 — Communications & Protocol Officer (`mcts_protocol.py`):** - Madhu **:** Implement `MCTSNode` and the 4-phase `MCTSEngine` (`puct_score` using $\text{PUCT}(s,a) = Q(s,a) + c_{\text{puct}} P(a\mid s)\frac{\sqrt{N(s)}}{1+N(s,a)}$, `select_best_child`, `expand`, `simulate_rollout`, and `backpropagate`).
-- [ ] **Part 3 — Data & Payload Specialist (`prm_evaluator.py`):** Implement `ProcessRewardEvaluator` supporting step-level scoring, trajectory reductions (`min`, `prod`, `geometric_mean`), comparison against `OutcomeRewardEvaluator` on false-positive cancellation traps, and *Math-Shepherd* Monte Carlo soft/hard step label estimation.
+- [x] **Part 3 — Data & Payload Specialist (`prm_evaluator.py`)** - Osaf's station, implemented by Fahad **:** Implement `ProcessRewardEvaluator` supporting step-level scoring, trajectory reductions (`min`, `prod`, `geometric_mean`), comparison against `OutcomeRewardEvaluator` on false-positive cancellation traps, and *Math-Shepherd* Monte Carlo soft/hard step label estimation.
 - [x] **Part 4 — Security & Ethics Sentinel (`horizon_pruner.py`):** - Janusz **:** Implement `EventHorizonPruner` to sever hallucinated branches when $r_{\text{PRM}}(z_t) < \tau_{\text{horizon}}$ and detect/penalize adversarial PRM reward-hacking payloads (sycophantic filler phrases & artificial step-splitting inflation).
 - [ ] **Part 5 — All 4 Squadron Officers (`mission-07-doc.md` $\rightarrow$ `mission-07-doc.pdf`):** Complete `mission-07-doc.md` after all 4 modules pass verification, export it to **`mission-07-doc.pdf`**, and upload the PDF to **Moodle**.
 
@@ -48,6 +48,8 @@ python tot_solver.py                   # instructor harness (mock 24 km/s tree) 
 python tot_solver.py --selftest        # 39 checks: node, budget, beam, depth, pruning, backtracking, Game of 24, Parts 2/3/4
 python tot_solver.py --bench           # full benchmark: BFS B = 1/2/3/5 and DFS over budgets 48..192 and evaluator noise 0 / 0.25 / 0.5
 python tot_solver.py --check-signoffs  # gate: Parts 1-4 ticked above
+python prm_evaluator.py                # Part 3 harness + Section C tables (length penalty, ORM vs PRM, Math-Shepherd vs M)
+python prm_evaluator.py --selftest     # 28 checks incl. Part 1 and Part 4 integration
 ```
 
 Each run writes `logs/<timestamp>-ps07-<mode>.json`.

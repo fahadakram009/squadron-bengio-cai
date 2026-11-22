@@ -17,7 +17,7 @@
 | :--- | :--- | :--- | :--- |
 | **Systems Architect** | `Fahad Akram` | `tot_solver.py` | `PASS (39/39)` |
 | **Communications & Protocol Officer** | `Madhurima Lakshmi Prabha` | `mcts_protocol.py` | `PASS (13/13)` |
-| **Data & Payload Specialist** | `[Insert Name]` | `prm_evaluator.py` | `[PASS / VERIFIED]` |
+| **Data & Payload Specialist** | `Osaf Ahmad` (station) / implemented by `Fahad Akram` | `prm_evaluator.py` | `PASS (28/28)` |
 | **Security & Ethics Sentinel** | `Janusz Manczak` | `horizon_pruner.py` | `PASS (10/10)` |
 
 ---
@@ -152,10 +152,35 @@ graph TD
 
 | Trajectory Type | ORM Terminal Score | PRM (`min`) | PRM (`prod`) | PRM (`geometric_mean`) | Math-Shepherd Soft Label ($M=4$) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Rigorous Kerr Proof** | `1.00` | `0.940` | `0.831` | `0.940` | `0.75` |
-| **False-Positive Sign Trap** | `1.00 (Trap!)` | `0.120` | `0.106` | `0.473` | `[Insert]` |
+| **Rigorous Kerr Proof** | `1.00` | `0.940` | `0.831` | `0.940` | `0.75` (hard `1.0`) |
+| **False-Positive Sign Trap** | `1.00 (Trap!)` | `0.120` | `0.106` | `0.473` | `0.25` (hard `1.0`, one lucky rollout) |
 
-- **Data Analysis:** `[Explain why ORM fails on false-positive intermediate reasoning errors, why product reduction penalizes longer chains, and how Math-Shepherd estimates step quality without human annotations.]`
+- **Step scoring:** the starter's markers are kept (`[FLAWED]` / `SIGN_ERROR` 0.12, `[MINOR_DRIFT]` 0.55, default 0.94) and extended with exact arithmetic verification: a step that states `a op b = c` is checked with `Fraction`, a false equation scores 0.12 whatever the step says about itself, a true one 0.97, and negative evidence always wins (a true aside such as `(-1 * -1 = +1)` cannot rescue a `[FLAWED]` step).
+- **Length penalty of the three reductions** (a chain of $T$ steps of equal quality 0.94):
+
+| $T$ | `min` | `prod` | `geometric_mean` |
+| :---: | :---: | :---: | :---: |
+| 1 | 0.940 | 0.940 | 0.940 |
+| 4 | 0.940 | 0.781 | 0.940 |
+| 8 | 0.940 | 0.610 | 0.940 |
+| 16 | 0.940 | 0.372 | 0.940 |
+
+- **ORM vs PRM on 200 synthetic proofs** (half carry one flawed step; a flaw cancels out to the right final answer with probability 0.3; PRM accepts at `min` $\ge 0.45$):
+
+| Model | TP | FP | TN | FN | False-positive rate | Recall | Accuracy |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| ORM | 101 | 35 | 64 | 0 | 0.35 | 1.00 | 0.82 |
+| PRM (`min`) | 101 | 0 | 99 | 0 | 0.00 | 1.00 | 1.00 |
+
+- **Math-Shepherd label quality vs number of rollouts $M$** (simulated completion policy that reaches the ground truth from the step with probability $p$; 200 steps per cell; MAE = mean absolute error of the soft label against $p$):
+
+| $p$ | $M=4$ MAE / hard | $M=16$ MAE / hard | $M=64$ MAE / hard | $M=256$ MAE / hard |
+| :---: | :---: | :---: | :---: | :---: |
+| 0.1 | 0.139 / 0.41 | 0.060 / 0.81 | 0.034 / 0.99 | 0.015 / 1.00 |
+| 0.5 | 0.181 / 0.94 | 0.101 / 1.00 | 0.047 / 1.00 | 0.027 / 1.00 |
+| 0.9 | 0.137 / 1.00 | 0.065 / 1.00 | 0.029 / 1.00 | 0.014 / 1.00 |
+
+- **Data Analysis:** The ORM fails on the sign trap because it only reads the last step: two illegal sign flips cancel and the chain lands on `v_esc = 24.0 km/s`, so the terminal check awards 1.0 to a proof whose second step is wrong. On the synthetic benchmark that is a 35 percent false-positive rate, exactly the cancellation probability, because every cancelled flaw is invisible from the answer alone. The PRM reads every step; its `min` reduction is a weakest-link detector that drops the trap to 0.12 and has zero false positives with full recall, and the Sentinel's pruner, fed with these step scores, severs the trap at step 2. The reductions differ in how they treat length. `prod` is the joint validity $\prod_t r_t$ and therefore decays geometrically even for a flawless chain, from 0.94 at one step to 0.37 at sixteen, so under `prod` a long correct proof is scored below a short one and a search would be pushed toward brevity rather than correctness; `min` and the geometric mean are length-neutral at 0.94, and `min` is the right choice for pruning (one bad step should sink the chain) while the geometric mean is the right choice for comparing chains of different length. The geometric mean also hides the trap (0.473 against 0.120), which is why it must not be used as a gate. Math-Shepherd replaces human step labels with Monte Carlo completions: from the step $z_t$ sample $M$ continuations, and the soft label is the fraction that reaches the ground-truth answer, which is an unbiased estimate of the step's success probability $p$ with binomial error $\sqrt{p(1-p)/M}$; the measured error halves each time $M$ is quadrupled (0.18 at $M=4$ to 0.03 at $M=256$ for $p=0.5$). The hard label, "at least one rollout succeeds", is the optimistic one: on the sign trap one lucky rollout in four already gives hard 1.0 against soft 0.25, and on the simulation a poor step with $p=0.1$ is labelled correct 99 percent of the time once $M \ge 64$. Soft labels with a moderate $M$ are therefore the supervision signal to train a PRM on; hard labels are only usable with small $M$.
 
 ### Section D — Security & Ethics Sentinel (`horizon_pruner.py`)
 - **Event Horizon Pruning & Ship Anomaly 07 Defense Log:**
@@ -251,6 +276,44 @@ Full search, c_puct=2.5, 60 simulations: visits A=16, B=43, C=1 -> play B: retro
 
 
 $ python prm_evaluator.py
+=== Subsystem 07 (Part 3): PRM vs. ORM & Math-Shepherd Verification ===
+Rigorous Chain       | ORM=1.00 | PRM(min)=0.940 | PRM(prod)=0.831 | PRM(geo)=0.940 | Shepherd(M=4) soft=0.75 hard=1
+False-Positive Trap  | ORM=1.00 | PRM(min)=0.120 | PRM(prod)=0.106 | PRM(geo)=0.473 | Shepherd(M=4) soft=0.25 hard=1
+[OK] Part 3 (Data & Payload Specialist) verification passed.
+
+Length penalty at a fixed step quality 0.94 (min and geometric mean are length-neutral, prod is not):
+    T     min    prod     geo
+    1   0.940   0.940   0.940
+    2   0.940   0.884   0.940
+    4   0.940   0.781   0.940
+    8   0.940   0.610   0.940
+   16   0.940   0.372   0.940
+
+ORM vs PRM(min) on 200 synthetic proofs (half flawed; a flaw cancels to the right answer with p = 0.3):
+  model    TP   FP   TN   FN     FPR     TPR     acc
+  ORM     101   35   64    0    0.35    1.00    0.82
+  PRM     101    0   99    0    0.00    1.00    1.00
+
+Math-Shepherd on a simulated completion policy (200 steps per cell): soft-label MAE vs M, and the mean hard label:
+  p_true    M  soft MAE  sd theory  hard mean
+     0.1    4     0.139      0.150       0.41
+     0.1   16     0.060      0.075       0.81
+     0.1   64     0.034      0.038       0.99
+     0.1  256     0.015      0.019       1.00
+     0.5    4     0.181      0.250       0.94
+     0.5   16     0.101      0.125       1.00
+     0.5   64     0.047      0.062       1.00
+     0.5  256     0.027      0.031       1.00
+     0.9    4     0.137      0.150       1.00
+     0.9   16     0.065      0.075       1.00
+     0.9   64     0.029      0.037       1.00
+     0.9  256     0.014      0.019       1.00
+
+Arithmetic verification examples:
+  0.97  equation verified true   Step 2: 13 - 9 = 4 (left: [4, 4, 10])
+  0.12  equation verified false  Step 2: 13 - 9 = 5 (left: [4, 5, 10])
+  0.97  equation verified true   Step 2: 7/2 * 4 = 14
+  0.97  equation verified true   Step 2: Looks rigorous and careful, (-1 * -1 = +1)
 
 $ python horizon_pruner.py
 === Subsystem 07 (Part 4): Event Horizon Pruner & Reward-Hacking Defense ===

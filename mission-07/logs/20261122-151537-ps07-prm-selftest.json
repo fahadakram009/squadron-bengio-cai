@@ -1,0 +1,151 @@
+{
+  "mission": "ps07",
+  "station": "03 Data & Payload Specialist (implemented by the Architect)",
+  "mode": "selftest",
+  "timestamp": "2026-11-22T15:15:37",
+  "python": "3.12.15",
+  "passed": 28,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "min reduction is the weakest link",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "prod reduction is the joint validity",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "geometric mean is prod^(1/T)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "for scores in (0, 1]: prod <= min <= geometric mean",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "empty trajectory scores 0 under every reduction and ORM",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "unknown reduction is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "length penalty: prod decays as 0.94^T while min and geometric mean stay at 0.94",
+      "passed": true,
+      "detail": "prod at T=16: 0.372"
+    },
+    {
+      "name": "marker scores kept from the starter: [FLAWED] 0.12, SIGN_ERROR 0.12, [MINOR_DRIFT] 0.55, default 0.94",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "a true equation is verified (0.97), a false one is flagged (0.12) regardless of wording",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "fractions and decimals are checked exactly",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "division by zero is a false equation, a step without an equation falls back to markers",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "arithmetic verification can be switched off (starter behaviour)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "negative evidence wins: a true aside '(-1 * -1 = +1)' does not rescue a [FLAWED] step",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "first_flawed_step finds the trap at step 2 and -1 on the clean chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "instructor harness: ORM is fooled by the trap (1.00) and PRM(min) catches it (0.12)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "instructor harness: rigorous chain scores min 0.940, prod 0.831, geo 0.940",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "benchmark: ORM accepts cancelled flaws (FPR about p_cancel), PRM(min) has zero false positives and full recall",
+      "passed": true,
+      "detail": "ORM FPR 0.35, PRM acc 1.00"
+    },
+    {
+      "name": "instructor harness: Math-Shepherd M=4 gives soft 0.75, hard 1.0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "trap step: one lucky rollout of four gives soft 0.25 but hard 1.0 (the hard label is the optimistic one)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no rollouts: both labels 0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "all rollouts wrong: soft 0 and hard 0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "soft-label error falls with M for every p (4 -> 16 -> 64 -> 256)",
+      "passed": true,
+      "detail": "p=0.5: 0.181 -> 0.027"
+    },
+    {
+      "name": "soft-label error is within 2x of the binomial standard deviation sqrt(p(1-p)/M)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "hard label saturates: a poor step (p = 0.1) is labelled 1 almost always once M >= 64",
+      "passed": true,
+      "detail": "M=4: 0.41, M=64: 0.99"
+    },
+    {
+      "name": "Part 1 ToT with this PRM as evaluator: the false equation branch is pruned, the verified branch reaches [GOAL]",
+      "passed": true,
+      "detail": "Step 1: 2 * 3 = 6 so r = 6GM/c^2 -> Step 2': v = c / sqrt(3) -> Step 3: v_esc = 24.0 km/s [GOAL]"
+    },
+    {
+      "name": "Part 1 min-link cumulative equals this file's min reduction on the winning chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Game of 24 thoughts from Part 1 are all verified-true equations (0.97 each) and the search still ends at a terminal",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Part 4 pruner fed with these PRM scores severs the trap at step 2 and keeps the rigorous chain whole",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}

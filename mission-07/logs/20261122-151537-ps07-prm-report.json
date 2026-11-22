@@ -1,0 +1,178 @@
+{
+  "mission": "ps07",
+  "station": "03 Data & Payload Specialist (implemented by the Architect)",
+  "mode": "report",
+  "timestamp": "2026-11-22T15:15:37",
+  "python": "3.12.15",
+  "harness": {
+    "Rigorous Chain": {
+      "orm": 1.0,
+      "min": 0.94,
+      "prod": 0.8305839999999999,
+      "geo": 0.94,
+      "shepherd": {
+        "soft_label": 0.75,
+        "hard_label": 1.0
+      }
+    },
+    "False-Positive Trap": {
+      "orm": 1.0,
+      "min": 0.12,
+      "prod": 0.10603199999999997,
+      "geo": 0.4733099682089877,
+      "shepherd": {
+        "soft_label": 0.25,
+        "hard_label": 1.0
+      }
+    }
+  },
+  "length_penalty": [
+    {
+      "T": 1,
+      "min": 0.94,
+      "prod": 0.94,
+      "geometric_mean": 0.94
+    },
+    {
+      "T": 2,
+      "min": 0.94,
+      "prod": 0.8835999999999999,
+      "geometric_mean": 0.94
+    },
+    {
+      "T": 4,
+      "min": 0.94,
+      "prod": 0.7807489599999998,
+      "geometric_mean": 0.94
+    },
+    {
+      "T": 8,
+      "min": 0.94,
+      "prod": 0.6095689385410813,
+      "geometric_mean": 0.94
+    },
+    {
+      "T": 16,
+      "min": 0.94,
+      "prod": 0.37157429083410054,
+      "geometric_mean": 0.94
+    }
+  ],
+  "false_positive": {
+    "n_chains": 200,
+    "p_flaw": 0.5,
+    "p_cancel": 0.3,
+    "counts": {
+      "orm": {
+        "tp": 101,
+        "fp": 35,
+        "tn": 64,
+        "fn": 0
+      },
+      "prm": {
+        "tp": 101,
+        "fp": 0,
+        "tn": 99,
+        "fn": 0
+      }
+    },
+    "rates": {
+      "orm": {
+        "false_positive_rate": 0.35353535353535354,
+        "true_positive_rate": 1.0,
+        "accuracy": 0.825
+      },
+      "prm": {
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 1.0,
+        "accuracy": 1.0
+      }
+    }
+  },
+  "shepherd_vs_M": [
+    {
+      "p_true": 0.1,
+      "M": 4,
+      "soft_mae": 0.1390000000000002,
+      "hard_mean": 0.405,
+      "theory_sd": 0.15000000000000002
+    },
+    {
+      "p_true": 0.1,
+      "M": 16,
+      "soft_mae": 0.05975,
+      "hard_mean": 0.815,
+      "theory_sd": 0.07500000000000001
+    },
+    {
+      "p_true": 0.1,
+      "M": 64,
+      "soft_mae": 0.03376562499999998,
+      "hard_mean": 0.995,
+      "theory_sd": 0.037500000000000006
+    },
+    {
+      "p_true": 0.1,
+      "M": 256,
+      "soft_mae": 0.015097656249999997,
+      "hard_mean": 1.0,
+      "theory_sd": 0.018750000000000003
+    },
+    {
+      "p_true": 0.5,
+      "M": 4,
+      "soft_mae": 0.18125,
+      "hard_mean": 0.94,
+      "theory_sd": 0.25
+    },
+    {
+      "p_true": 0.5,
+      "M": 16,
+      "soft_mae": 0.10125,
+      "hard_mean": 1.0,
+      "theory_sd": 0.125
+    },
+    {
+      "p_true": 0.5,
+      "M": 64,
+      "soft_mae": 0.047421875,
+      "hard_mean": 1.0,
+      "theory_sd": 0.0625
+    },
+    {
+      "p_true": 0.5,
+      "M": 256,
+      "soft_mae": 0.026640625,
+      "hard_mean": 1.0,
+      "theory_sd": 0.03125
+    },
+    {
+      "p_true": 0.9,
+      "M": 4,
+      "soft_mae": 0.13700000000000018,
+      "hard_mean": 1.0,
+      "theory_sd": 0.15
+    },
+    {
+      "p_true": 0.9,
+      "M": 16,
+      "soft_mae": 0.06462499999999999,
+      "hard_mean": 1.0,
+      "theory_sd": 0.075
+    },
+    {
+      "p_true": 0.9,
+      "M": 64,
+      "soft_mae": 0.029156249999999998,
+      "hard_mean": 1.0,
+      "theory_sd": 0.0375
+    },
+    {
+      "p_true": 0.9,
+      "M": 256,
+      "soft_mae": 0.0144296875,
+      "hard_mean": 1.0,
+      "theory_sd": 0.01875
+    }
+  ]
+}
