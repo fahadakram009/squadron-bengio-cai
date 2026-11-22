@@ -1,18 +1,13 @@
 """
-Mission 07 - Part 2: Communications & Protocol Officer (Madhu)
+Mission 07 — Part 2: Communications & Protocol Officer
 4-Phase Monte Carlo Tree Search (MCTS) & PUCT Selection Engine
 
 Starship Operational Unit: USSE Noosphere Bridge Crew
 Sector: SEC-07-SGR (Sagittarius A* Supermassive Black Hole)
 Subsystem 07: Gravitational Search Horizon & Process Reward Evaluator
-
-- PUCT(s, a) = Q(s, a) + c_puct * P(a|s) * sqrt(max(1, N(s))) / (1 + N(s, a))
-- one simulation = select a leaf, expand it, roll out the new node, backpropagate the reward
-- after the search the move to play is the child with the most visits
 """
 
 import math
-import sys
 from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Optional
 
@@ -38,26 +33,29 @@ class MCTSNode:
 
 class MCTSEngine:
     """
-    The 4 phases of MCTS for LLM reasoning:
-    1. Selection (PUCT)
-    2. Expansion (candidate reasoning steps with policy priors P(a|s))
-    3. Simulation / Rollout (value of the new step, e.g. from a PRM)
-    4. Backpropagation (update N and W on the path back to the root)
+    Implements the 4 canonical phases of Monte Carlo Tree Search (MCTS) for LLM reasoning:
+    1. Selection (via Predictor + Upper Confidence Bound applied to Trees, PUCT)
+    2. Expansion (attaching candidate reasoning steps with LLM policy priors P(a|s))
+    3. Simulation / Rollout (estimating value via PRM or trajectory completion)
+    4. Backpropagation (updating N(s,a) and W(s,a) along the ancestor path)
     """
 
     def __init__(self, c_puct: float = 1.5):
-        if c_puct < 0:
-            raise ValueError("c_puct must be >= 0")
         self.c_puct = c_puct
 
     def puct_score(self, parent: MCTSNode, child: MCTSNode) -> float:
-        """PUCT(s, a) = Q(s, a) + c_puct * P(a | s) * sqrt(max(1, N(s))) / (1 + N(s, a))"""
+        """
+        Compute the exact PUCT score for `child` under `parent`:
+            PUCT(s, a) = Q(s, a) + c_puct * P(a | s) * sqrt(max(1, N(s))) / (1 + N(s, a))
+        """
         parent_visits = max(1, parent.visit_count)
         u_value = self.c_puct * child.prior_prob * (math.sqrt(parent_visits) / (1 + child.visit_count))
         return child.q_value + u_value
 
     def select_best_child(self, node: MCTSNode) -> MCTSNode:
-        """Child of `node` with the highest PUCT score (first one wins a tie)."""
+        """
+        Return the child of `node` that maximizes `self.puct_score(node, child)`.
+        """
         if not node.children:
             raise ValueError("Cannot select a child from a leaf node with no children.")
         return max(node.children, key=lambda child: self.puct_score(node, child))
@@ -73,28 +71,39 @@ class MCTSEngine:
         return curr
 
     def expand(self, node: MCTSNode, action_priors: Dict[str, float]) -> List[MCTSNode]:
-        """Phase 2 (Expansion): one child per (state_str, prior_prob) pair."""
+        """
+        Phase 2 (Expansion):
+        Instantiate and attach child `MCTSNode` objects for each `(state_str, prior_prob)` in `action_priors`.
+        """
         if node.is_terminal:  # a finished trajectory has no next step
             return node.children
         for state_str, prior_prob in action_priors.items():
             if prior_prob < 0:
                 raise ValueError(f"Negative prior for '{state_str}': {prior_prob}")
-        existing = {child.state for child in node.children}
+        existing = {c.state for c in node.children}
         for state_str, prior_prob in action_priors.items():
-            if state_str not in existing:  # no duplicate children if expand is called twice
-                node.children.append(MCTSNode(state=state_str, prior_prob=prior_prob, parent=node))
+            if state_str in existing:  # no duplicate children if expand is called twice
+                continue
+            child = MCTSNode(state=state_str, prior_prob=prior_prob, parent=node)
+            node.children.append(child)
         return node.children
 
     def simulate_rollout(self, node: MCTSNode, rollout_evaluator: Callable[[str], float]) -> float:
-        """Phase 3 (Simulation / Rollout): evaluate node.state, clamp to [0.0, 1.0]."""
+        """
+        Phase 3 (Simulation / Rollout):
+        Evaluate `node.state` using `rollout_evaluator` and clamp the scalar reward to [0.0, 1.0].
+        """
         reward = float(rollout_evaluator(node.state))
-        # min/max would turn NaN into 1.0, so a broken evaluator counts as reward 0
-        if math.isnan(reward):
+        if math.isnan(reward):  # min/max below would turn NaN into 1.0
             return 0.0
         return max(0.0, min(1.0, reward))
 
     def backpropagate(self, node: MCTSNode, reward: float) -> None:
-        """Phase 4 (Backpropagation): N += 1 and W += reward from `node` up to the root."""
+        """
+        Phase 4 (Backpropagation):
+        Traverse from `node` up to the root (`curr = curr.parent`), incrementing `visit_count += 1`
+        and adding `reward` to `value_sum` for every node along the path.
+        """
         curr: Optional[MCTSNode] = node
         while curr is not None:
             curr.visit_count += 1
@@ -104,7 +113,7 @@ class MCTSEngine:
     def search(self, root: MCTSNode, n_simulations: int,
                prior_fn: Callable[[str], Dict[str, float]],
                rollout_evaluator: Callable[[str], float]) -> MCTSNode:
-        """Run n_simulations of the 4 phases and return the most visited child of root."""
+        """Run the 4 phases n_simulations times and return the most visited child of root."""
         for _ in range(n_simulations):
             leaf = self.select_leaf(root)
             if not leaf.is_terminal:
@@ -120,10 +129,10 @@ class MCTSEngine:
         return max(root.children, key=lambda c: (c.visit_count, c.q_value))
 
 
-# --- verification -------------------------------------------------------------------
+# --- extra checks (Madhu) -------------------------------------------------------------
 
 def trace_tree():
-    """The PUCT trace from the brief / doc Section B: N(s)=16, A: Q=0.75 N=5 P=0.50, B: Q=0.55 N=1 P=0.40."""
+    """Same numbers as the harness below and doc Section B: N(s)=16, A: Q=0.75 N=5 P=0.50, B: Q=0.55 N=1 P=0.40."""
     root = MCTSNode(state="Root: Sagittarius A* Ergosphere Geodesic Entry", visit_count=16)
     branch_a = MCTSNode(state="Branch A: Prograde Frame-Dragging Assist", prior_prob=0.50, parent=root,
                         visit_count=5, value_sum=0.75 * 5)
@@ -223,21 +232,13 @@ def run_tests() -> int:
     for name, ok in tests:
         print(f"  [{'PASS' if ok else 'FAIL'}] {name}")
     failed = sum(not ok for _, ok in tests)
-    print(f"--- {len(tests) - failed} passed, {failed} failed ---\n")
+    print(f"--- {len(tests) - failed} passed, {failed} failed ---")
     return failed
 
 
 def report() -> None:
     root, a, b = trace_tree()
-    engine = MCTSEngine(c_puct=1.5)
-    print("PUCT selection trace (c_puct = 1.5):")
-    for name, n in (("A", a), ("B", b)):
-        u = engine.puct_score(root, n) - n.q_value
-        print(f"  Branch {name}: Q={n.q_value:.2f} P={n.prior_prob:.2f} N(s)={root.visit_count} "
-              f"N(s,a)={n.visit_count} U={u:.4f} PUCT={engine.puct_score(root, n):.4f}")
-    print(f"  selected: {engine.select_best_child(root).state}\n")
-
-    print("c_puct sweep on the same two branches:")
+    print("c_puct sweep on Branch A / Branch B (doc Section B):")
     for c in (0.4, 0.5, 1.0, 1.5, 2.5):
         e = MCTSEngine(c)
         print(f"  c_puct={c:<4} PUCT(A)={e.puct_score(root, a):.4f} PUCT(B)={e.puct_score(root, b):.4f} "
@@ -251,10 +252,43 @@ def report() -> None:
     print()
 
 
+# ==============================================================================
+# Verification Harness for Part 2 (Communications & Protocol Officer)
+# ==============================================================================
 if __name__ == "__main__":
     print("=== Subsystem 07 (Part 2): MCTS & PUCT Protocol Verification ===")
+
+    engine = MCTSEngine(c_puct=1.5)
+    root = MCTSNode(state="Root: Sagittarius A* Ergosphere Geodesic Entry", visit_count=16)
+
+    branch_a = MCTSNode(state="Branch A: Prograde Frame-Dragging Assist", prior_prob=0.50, parent=root)
+    branch_a.visit_count = 5
+    branch_a.value_sum = 0.75 * 5  # Q(s, A) = 0.75
+
+    branch_b = MCTSNode(state="Branch B: Retrograde Penrose Extraction", prior_prob=0.40, parent=root)
+    branch_b.visit_count = 1
+    branch_b.value_sum = 0.55 * 1  # Q(s, B) = 0.55
+
+    root.children = [branch_a, branch_b]
+
+    puct_a = engine.puct_score(root, branch_a)
+    puct_b = engine.puct_score(root, branch_b)
+    selected = engine.select_best_child(root)
+
+    print(f"Branch A -> Q={branch_a.q_value:.2f}, N={branch_a.visit_count}, P={branch_a.prior_prob:.2f} | PUCT = {puct_a:.4f}")
+    print(f"Branch B -> Q={branch_b.q_value:.2f}, N={branch_b.visit_count}, P={branch_b.prior_prob:.2f} | PUCT = {puct_b:.4f}")
+    print(f"Selected Next Node for Expansion: {selected.state}")
+
+    assert abs(puct_a - 1.25) < 1e-6, f"Expected PUCT(A)=1.25, got {puct_a}"
+    assert abs(puct_b - 1.75) < 1e-6, f"Expected PUCT(B)=1.75, got {puct_b}"
+    assert selected is branch_b, "MCTS failed to select under-explored high-PUCT Branch B!"
+
+    # Test Backpropagation
+    engine.backpropagate(branch_b, reward=0.95)
+    assert branch_b.visit_count == 2 and root.visit_count == 17, "Backpropagation failed to increment visit counts!"
+    print("[OK] Part 2 (Communications & Protocol Officer) verification passed.")
+
+    print()
     report()
-    failed = run_tests()
-    if failed == 0:
-        print("[OK] Part 2 (Communications & Protocol Officer) verification passed.")
-    sys.exit(1 if failed else 0)
+    if run_tests():
+        raise SystemExit(1)
