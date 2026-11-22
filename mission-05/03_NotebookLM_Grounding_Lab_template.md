@@ -11,9 +11,12 @@
 ### Section 1: Source Document Upload & Attribution Setup
 
 1. **Source Corroboration:**
-   Upload the primary course texts (e.g. Shannon 1948, Turing 1950, or Vaswani 2017) to [Google NotebookLM](https://notebooklm.google.com).
+   Upload the three Mission 05 primary documents to [Google NotebookLM](https://notebooklm.google.com):
+   - **Document A:** Patrick Lewis et al. (2020) — *RAG for Knowledge-Intensive NLP Tasks*
+   - **Document B:** Darren Edge et al. (2024) — *From Local to Global: A Graph RAG Approach*
+   - **Document C:** [`Document_C_USSE_Noosphere_Technical_Archive_Extract.md`](./Document_C_USSE_Noosphere_Technical_Archive_Extract.md) *(or alternatively a third Week 5 reading such as RAGAS 2023, MemGPT 2023, or `ps05_briefing.md`)*
 2. **Grounding Verification:**
-   Submit an out-of-domain query (e.g. *"What is the warp core temperature of the USSE Enterprise in Star Trek?"*).
+   Submit an out-of-domain query (e.g. *"What is the Year 2099 Mk-IV quantum warp drive serial number?"*, *"What is Commander Tarkov's zero-gravity borscht recipe?"*, or *"What is the warp core temperature of the USS Enterprise in Star Trek?"*).
 3. **Negative Constraint Test:**
    * Did NotebookLM refuse to hallucinate using un-sourced parametric memory?
    * *Cadet Findings:* [Document the exact response and whether inline citation chips were suppressed]

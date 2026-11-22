@@ -15,12 +15,13 @@ This repository folder contains the starter assets and templates for **Mission 5
 
 ```
 mission-05/
-├── README.md                                          <- Mission overview & squad sign-off status
-├── ps05_briefing.md                                    <- Full mission specification & problem statement
-├── 01_HNSW_Vector_Index_starter.py                    <- Starter script (Systems Architect)
-├── 02_BM25_and_RRF_Combiner_starter.py               <- Starter script (Protocol Officer)
-├── 03_NotebookLM_Grounding_Lab_template.md            <- Laboratory template (Data Specialist)
-└── 04_Prompt_Injection_and_RAG_Audit_starter.py      <- Defense & RAG triad audit (Security Sentinel)
+├── README.md                                                  <- Mission overview & squad sign-off status
+├── ps05_briefing.md                                           <- Full mission specification & problem statement
+├── Document_C_USSE_Noosphere_Technical_Archive_Extract.md     <- Document C for Part 3 (NotebookLM Grounding Lab)
+├── 01_HNSW_Vector_Index_starter.py                            <- Starter script (Systems Architect)
+├── 02_BM25_and_RRF_Combiner_starter.py                        <- Starter script (Protocol Officer)
+├── 03_NotebookLM_Grounding_Lab_template.md                    <- Laboratory template (Data Specialist)
+└── 04_Prompt_Injection_and_RAG_Audit_starter.py               <- Defense & RAG triad audit (Security Sentinel)
 ```
 
 ---

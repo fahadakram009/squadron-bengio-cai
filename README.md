@@ -16,6 +16,11 @@ This repository contains the starter code, briefing specifications, role deliver
 | **Mission 04** | *Betelgeuse / Orion* | Direct Preference Optimization (DPO), SimPO & Activation Steering | [`mission-04/`](./mission-04/) |
 | **Mission 05** | *Crab Pulsar Remnant* | Dual-Path GraphRAG, BM25 + HNSW Hybrid Search & Google NotebookLM | [`mission-05/`](./mission-05/) |
 | **Mission 06** | *Eta Carinae Nebula* | Autonomous Warp State Machine, Tool Calling Contracts & Deliberation Loop | [`mission-06/`](./mission-06/) |
+| **Mission 07** | *Sagittarius A* (`SEC-07-SGR`)* | Test-Time Compute Scaling, Tree-of-Thoughts, MCTS (PUCT) & Process Reward Models (PRM) | [`mission-07/`](./mission-07/) |
+| **Mission 08** | *Cygnus X-1 & Veil Nebula (`SEC-08-CYG`)* | ReWOO DAG Planning, Reflexion Traceback Surgery, MemGPT Virtual Context Paging & MemoryGraft Defense | [`mission-08/`](./mission-08/) |
+| **Mission 09** | *Large Magellanic Cloud / Tarantula Nebula (`SEC-09-LMC`)* | Agentic RAG, Corrective RAG (CRAG), Self-RAG Reflection & Hardware-Accelerated Retrieval on Free Google TPUs (`torch_tpu`) | [`mission-09/`](./mission-09/) |
+| **Mission 10** | *Boötes Deep Void (`SEC-10-VOID`)* | AI Safety, Semantic Entropy, CaMeL Dual-LLM Injection Defense & OpenTelemetry (`gen_ai.*`) Agent Observability | [`mission-10/`](./mission-10/) |
+| **Mission 11** | *Andromeda Galaxy Core (`SEC-11-M31`)* | Multi-Agent Systems (MAS), State-Graph Reducers, Least-Context Handoffs, Condorcet Debate Quorums, 3-Color DFS Deadlock Defense & Google ADK 2.0 / Antigravity Studio | [`mission-11/`](./mission-11/) |
 
 ---
 

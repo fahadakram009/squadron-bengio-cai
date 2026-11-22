@@ -70,7 +70,7 @@ To restore Subsystem 05 (+7.1% integrity, raising total ship AI consciousness to
   1. **Corpus Ingestion Protocol:** Upload three primary technical documents into a dedicated NotebookLM workspace:
      - Document A: Patrick Lewis et al. (2020) — *RAG for Knowledge-Intensive NLP Tasks* (PDF)
      - Document B: Darren Edge et al. (2024) — *GraphRAG* (PDF)
-     - Document C: USSE Noosphere Technical Archive Extract (provided in course repo)
+     - Document C: [`Document_C_USSE_Noosphere_Technical_Archive_Extract.md`](./Document_C_USSE_Noosphere_Technical_Archive_Extract.md) (provided in `mission-05/` — *Note: you may alternatively use a third Week 5 primary reading such as RAGAS by Es et al. 2023, MemGPT by Packer et al. 2023, or `ps05_briefing.md`*)
   2. **Grounded Query & Citation Probe:**
      - Formulate 5 complex cross-document technical queries.
      - Verify that every generated claim in NotebookLM's response contains an interactive numeric citation badge.
