@@ -3,8 +3,8 @@
 **Course:** Conversational AI (WS 2026/27) — Week 8: Core Agentic Design Patterns & State Memory Systems  
 **Sector Waypoint:** `SEC-08-CYG` (Cygnus X-1 Stellar-Mass Black Hole & Veil Nebula)  
 **AURA Subsystem:** Subsystem 08 — ReWOO DAG Planner, Reflexion Surgeon & MemGPT Virtual Pager  
-**Squadron Name:** `[Insert Squadron / Team Name]`  
-**Public GitHub Repository URL:** `[Insert https://github.com/<your-org>/<your-repo>]`  
+**Squadron Name:** `Bengio (Moodle Group 11)`  
+**Public GitHub Repository URL:** `https://github.com/fahadakram009/squadron-bengio-cai`  
 **Submission Date:** `[YYYY-MM-DD]`  
 
 ---
@@ -15,7 +15,7 @@
 
 | Station Role | Cadet Full Name | Deliverable File | Verification Status |
 | :--- | :--- | :--- | :--- |
-| **Systems Architect** | `[Insert Name]` | `rewoo_planner.py` | `[PASS / VERIFIED]` |
+| **Systems Architect** | `Fahad Akram` | `rewoo_planner.py` | `PASS (40/40)` |
 | **Communications & Protocol Officer** | `[Insert Name]` | `reflexion_surgeon.py` | `[PASS / VERIFIED]` |
 | **Data & Payload Specialist** | `[Insert Name]` | `memgpt_pager.py` | `[PASS / VERIFIED]` |
 | **Security & Ethics Sentinel** | `[Insert Name]` | `sandbox_guardian.py` | `[PASS / VERIFIED]` |
@@ -102,7 +102,10 @@ graph TD
 | **$K = 5$** | `10,000` | `4,400` | `56.00%` | `2.27x` |
 | **$K = 8$** | `20,800` | `5,600` | `73.08%` | `3.71x` |
 
-- **Topological Execution Schedule:** `[Insert your level grouping for #E1..#E4, e.g., Level 0: [#E1, #E2], Level 1: [#E3], Level 2: [#E4], and explain when ReWOO's upfront DAG must fall back to dynamic re-planning.]`
+- **Closed form vs measured tokens:** a mock model that counts the tokens of every prompt it receives, driven through a simulated ReAct loop and a simulated ReWOO run, reproduces the formulas exactly for $K = 1, 3, 5, 8, 16$. ReAct has a constant second difference of $L_{\text{step}} + L_{\text{obs}} = 400$ tokens (quadratic), ReWOO a second difference of 0 (linear). Because ReWOO pays two base prompts (planner and solver), it is *more* expensive at $K=1$ (2,800 vs 1,200) and $K=2$ (3,200 vs 2,800) and wins from $K=3$ on for any positive token sizes; at $K=16$ it saves 86.9 % (8,800 vs 67,200).
+- **Topological Execution Schedule:** the four-step blueprint groups into Level 0: `[#E1, #E2]`, Level 1: `[#E3]`, Level 2: `[#E4]` (critical path 3). Levels are built with Kahn's algorithm by frontier, so independent steps share a level and a cycle or a reference to an undefined variable raises before anything runs; forward references are allowed because order follows dependencies, not line order. The worker runs each level in a thread pool: with a simulated sensor latency of 50 ms the instructor DAG takes 158 ms in parallel against 210 ms serial (1.33x, the ideal for 4 steps in 3 levels) and a wider 6-step / 3-level DAG takes 159 ms against 323 ms (2.03x, ideal 2.00x). Substitution replaces whole variables only, so `#E1` never corrupts `#E10`.
+- **When the upfront DAG must fall back to dynamic re-planning:** ReWOO commits to the whole plan before any observation, which is exactly what makes it linear in tokens, so it has no way to react to a tool that fails at run time. A step whose output carries `ERR_` is marked as a fault; without a fallback its dependants are skipped with `ERR_UPSTREAM` (`#E1` fails, `#E2` still runs, `#E3` and `#E4` are skipped) and the solver sees an honest partial evidence set. With `fallback_replan_fn` the engine either takes a replacement value or, when the fallback answers with blueprint lines, splices the new steps into the DAG: in the demo `#E1 = TelemetryScan` fails with `ERR_CORONA_SPIKE`, the fallback returns `#E10 = BackupTelemetry[...]` and `#E11 = Calibrate[#E10]`, the engine runs them in two further levels, resolves `#E1` to `#E11`, and only then releases `#E3` and `#E4` (levels actually run: `[#E1, #E2], [#E10], [#E11], [#E3], [#E4]`). Re-planning is needed whenever a plan assumption is falsified at run time: a sensor fault, an empty or ambiguous tool result that a downstream argument depends on, or a tool that raises (a crashing tool becomes `ERR_EXCEPTION` evidence rather than killing the worker). It costs one extra planner call per fault, which is still far below a ReAct loop that re-encodes the transcript at every step.
+- **Solver stage:** the final prompt lists the task, every plan line with its resolved `#E`, and the evidence, in one call of 89 tokens for the demo; the planner call plus this solver call are the two base prompts in $C_{\text{ReWOO}}$.
 
 ### Section B — Communications & Protocol Officer (`reflexion_surgeon.py`)
 - **Reflexion Verbal RL Repair Trajectory ($\Omega = 3$):**
@@ -144,7 +147,71 @@ graph TD
 Paste the terminal output from running all four verification suites (`python rewoo_planner.py`, `python reflexion_surgeon.py`, `python memgpt_pager.py`, and `python sandbox_guardian.py`):
 
 ```text
-[Paste your terminal verification output here]
+$ python rewoo_planner.py
+=== Subsystem 08 (Part 1): ReWOO DAG Planner & Token Profiler Verification ===
+Parsed Steps (4): ['#E1', '#E2', '#E3', '#E4']
+Topological Parallel Execution Levels: [['#E1', '#E2'], ['#E3'], ['#E4']]
+  #E1 -> XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s
+  #E2 -> IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3
+  #E3 -> DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s
+  #E4 -> HarmonicLock(vector=DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s)=STABLE
+
+--- ReAct vs. ReWOO Cumulative Input Token Benchmark (L0=1200, L_step=120, L_obs=280) ---
+  K=3 tools | ReAct=  4800 tok | ReWOO= 3600 tok | Savings=25.00% (1.33x)
+  K=5 tools | ReAct= 10000 tok | ReWOO= 4400 tok | Savings=56.00% (2.27x)
+  K=8 tools | ReAct= 20800 tok | ReWOO= 5600 tok | Savings=73.08% (3.71x)
+[OK] Part 1 (Systems Architect) verification passed.
+
+--- Worker: parallel levels vs serial execution (simulated sensor latency 50 ms per tool) ---
+  instructor DAG (4 steps, 3 levels)   levels=3 parallel    164 ms | serial    226 ms | speed-up 1.38x (ideal 1.33x)
+  wide DAG (6 steps, 3 levels)         levels=3 parallel    172 ms | serial    339 ms | speed-up 1.97x (ideal 2.00x)
+
+--- Runtime fault: #E1 emits ERR_CORONA_SPIKE ---
+  without fallback: dependants are skipped
+  level var   tool             status         ms  output
+      0 #E1   TelemetryScan    error         0.0  ERR_CORONA_SPIKE(TelemetryScan)
+      0 #E2   PlasmaProbe      ok            0.0  IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3
+      1 #E3   HohmannCalc      skipped       0.0  ERR_UPSTREAM(#E1)
+      2 #E4   ShieldModulate   skipped       0.0  ERR_UPSTREAM(#E3)
+  with re-planning fallback: a backup scan and a calibration step are spliced into the DAG
+  level var   tool             status         ms  output
+      0 #E1   TelemetryScan    replanned     0.0  REPLANNED->#E10,#E11
+      0 #E2   PlasmaProbe      ok            0.0  IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3
+      1 #E10  BackupTelemetry  ok            0.0  XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e37_erg/s
+      2 #E11  Calibrate        ok            0.0  Calibrated(XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e3
+      3 #E3   HohmannCalc      ok            0.0  DeltaV(flux=Calibrated(XRayFlux_backup(Cygnus_X1_Corona_Sect
+      4 #E4   ShieldModulate   ok            0.0  HarmonicLock(vector=DeltaV(flux=Calibrated(XRayFlux_backup(C
+  levels actually run: [['#E1', '#E2'], ['#E10'], ['#E11'], ['#E3'], ['#E4']]
+  final evidence #E4 -> HarmonicLock(vector=DeltaV(flux=Calibrated(XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e37_erg/s), density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s)=STABLE
+
+--- Closed form vs measured tokens (mock model counts every prompt it receives) ---
+    K  ReAct formula  ReAct measured  ReWOO formula  ReWOO measured  savings
+    1           1200            1200           2800            2800  -133.3%
+    2           2800            2800           3200            3200   -14.3%
+    3           4800            4800           3600            3600    25.0%
+    4           7200            7200           4000            4000    44.4%
+    5          10000           10000           4400            4400    56.0%
+    8          20800           20800           5600            5600    73.1%
+   12          40800           40800           7200            7200    82.3%
+   16          67200           67200           8800            8800    86.9%
+  ReWOO costs more than ReAct at K = 1 and K = 2 (two base prompts instead of one), and wins from K = 3 on for any token sizes.
+
+--- Solver prompt (89 tokens, one call) ---
+  Task: Plot the escape burn out of the Cygnus X-1 corona.
+  Plan and evidence:
+  - Scan Cygnus X-1 hard X-ray flare flux from primary telemetry array. [#E1 = TelemetryScan[Cygnus_X1_Corona_Sector_08] -> XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s]
+  - Measure Veil Nebula shockwave plasma density in parallel. [#E2 = PlasmaProbe[Veil_Nebula_Shock_Front] -> IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3]
+  - Compute Hohmann escape burn vector combining X-ray flux #E1 and plasma density #E2. [#E3 = HohmannCalc[flux=#E1, density=#E2] -> DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s]
+  - Modulate deflector shield harmonics for burn trajectory #E3. [#E4 = ShieldModulate[vector=#E3] -> HarmonicLock(vector=DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s)=STABLE]
+  Answer the task using only the evidence above.
+  Solver: Plot the escape burn out of the Cygnus X-1 corona. -> HarmonicLock(vector=DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s)=STABLE
+
+$ python reflexion_surgeon.py
+
+$ python memgpt_pager.py
+
+$ python sandbox_guardian.py
+
 ```
 
 ---

@@ -31,11 +31,58 @@ mission-08/
 
 Before compiling your final documentation and submitting to Moodle, ensure all four station officers have implemented and verified their modules:
 
-- [ ] **Part 1 — Systems Architect (`rewoo_planner.py`):** Implement `PlanStep` and `ReWOOEngine` (`parse_blueprint`, `build_dependency_levels`, `execute_dag`, and `compare_token_cost` comparing $O(K^2)$ ReAct cumulative input tokens against $O(K)$ ReWOO).
+- [x] **Part 1 — Systems Architect (`rewoo_planner.py`)** - Fahad **:** Implement `PlanStep` and `ReWOOEngine` (`parse_blueprint`, `build_dependency_levels`, `execute_dag`, and `compare_token_cost` comparing $O(K^2)$ ReAct cumulative input tokens against $O(K)$ ReWOO).
 - [ ] **Part 2 — Communications & Protocol Officer (`reflexion_surgeon.py`):** Implement `TracebackParser` and the 3-Actor `ReflexionSurgeon` (`parse_traceback`, `generate_verbal_reflection` with sliding episodic buffer $\Omega = 3$, `is_duplicate_patch` via SHA-256 hashing, and `run_repair_loop`).
 - [ ] **Part 3 — Data & Payload Specialist (`memgpt_pager.py`):** Implement `ArchivalMemoryNode` and `MemGPTVirtualPager` (`core_memory_append`, `core_memory_replace`, `archival_memory_insert`, `check_memory_pressure` at $\tau_{\text{warn}} = 0.70$, and Generative Agents tri-factor retrieval scoring $S(m, q) = \alpha_{\text{rec}}\gamma^{\Delta t} + \alpha_{\text{imp}}\hat{I}(m) + \alpha_{\text{rel}}\cos(\mathbf{e}_m, \mathbf{e}_q)$).
 - [ ] **Part 4 — Security & Ethics Sentinel (`sandbox_guardian.py`):** Implement `SandboxGuardian(ast.NodeVisitor)` (`inspect_code` blocking forbidden imports, builtins, and dunder attribute escapes, plus `audit_episodic_write` defending against MemoryGraft `arXiv:2512.16962` and OEP `arXiv:2605.18930` experience poisoning).
 - [ ] **Part 5 — All 4 Squadron Officers (`mission-08-doc.md` $\rightarrow$ `mission-08-doc.pdf`):** Complete `mission-08-doc.md` after all 4 modules pass verification, export it to **`mission-08-doc.pdf`**, and upload the PDF to **Moodle**.
+
+---
+
+## Running the ReWOO planner (Systems Architect)
+
+```bash
+# from the repo root (same .venv as Missions 1-7; standard library only, nothing to install)
+cd mission-08
+python rewoo_planner.py                   # instructor harness + parallel timing + fault/re-planning traces + cost tables
+python rewoo_planner.py --selftest        # 40 checks: parsing, levels, substitution, worker, faults, solver, tokens, Parts 2/3/4
+python rewoo_planner.py --check-signoffs  # gate: Parts 1-4 ticked above
+```
+
+Each run writes `logs/<timestamp>-ps08-<mode>.json`.
+
+**What `rewoo_planner.py` implements** (the instructor's interface is kept: `parse_blueprint`,
+`to_plan_steps`, `build_dependency_levels`, `execute_dag(steps, fallback_replan_fn)`, `compare_token_cost`):
+
+1. **Planner output parsing** with validation: multi-line `Plan:` text, nested brackets in arguments, and
+   errors with line numbers for malformed steps, duplicate variables, self-references and references to
+   variables that do not exist.
+2. **Topological levels** (Kahn by frontier) with cycle and unknown-variable detection; forward references
+   are allowed since order follows dependencies, not line order.
+3. **Worker** that substitutes whole variables only (`#E1` never touches `#E10`) and runs each level in
+   parallel with a thread pool, keeping a per-step trace (level, tool, resolved argument, output, status,
+   duration). With 50 ms sensor latency the 6-step / 3-level DAG runs in 159 ms against 323 ms serial.
+4. **Runtime faults**: an `ERR_` output marks the step; without a fallback its dependants are skipped as
+   `ERR_UPSTREAM`; with `fallback_replan_fn` the engine takes a replacement value or, when the fallback
+   returns blueprint lines, splices the new steps into the DAG and resolves the failed variable to the
+   fragment's last step (dynamic re-planning: `#E1` fails, `#E10 -> #E11` are added, `#E3` waits for `#E11`).
+5. **Solver stage**: one final prompt with the plan and every resolved `#E`, and `solve()` with a pluggable
+   solver function.
+6. **Token profiler**: the closed forms of the briefing plus a mock model that counts the tokens of every
+   prompt it receives in a simulated ReAct loop and ReWOO run; the measurement equals the formula exactly.
+
+| K | ReAct tokens | ReWOO tokens | savings |
+|---|---|---|---|
+| 1 | 1,200 | 2,800 | -133 % |
+| 2 | 2,800 | 3,200 | -14 % |
+| 3 | 4,800 | 3,600 | 25 % |
+| 5 | 10,000 | 4,400 | 56 % |
+| 8 | 20,800 | 5,600 | 73 % |
+| 16 | 67,200 | 8,800 | 87 % |
+
+ReAct is quadratic (constant second difference 400 tokens), ReWOO linear. ReWOO pays two base prompts
+(planner and solver) so it is more expensive for one or two tool calls and wins from K = 3 whatever the
+token sizes.
 
 ---
 

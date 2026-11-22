@@ -1,0 +1,176 @@
+{
+  "mission": "ps08",
+  "station": "01 Systems Architect",
+  "mode": "harness",
+  "timestamp": "2026-11-22T15:37:33",
+  "python": "3.12.15",
+  "harness": {
+    "steps": [
+      "#E1",
+      "#E2",
+      "#E3",
+      "#E4"
+    ],
+    "levels": [
+      [
+        "#E1",
+        "#E2"
+      ],
+      [
+        "#E3"
+      ],
+      [
+        "#E4"
+      ]
+    ],
+    "evidence": {
+      "#E1": "XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s",
+      "#E2": "IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3",
+      "#E3": "DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s",
+      "#E4": "HarmonicLock(vector=DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s)=STABLE"
+    },
+    "cost": [
+      {
+        "K": 3,
+        "react_tokens": 4800.0,
+        "rewoo_tokens": 3600.0,
+        "savings_pct": 25.0,
+        "speedup_ratio": 1.33
+      },
+      {
+        "K": 5,
+        "react_tokens": 10000.0,
+        "rewoo_tokens": 4400.0,
+        "savings_pct": 56.0,
+        "speedup_ratio": 2.27
+      },
+      {
+        "K": 8,
+        "react_tokens": 20800.0,
+        "rewoo_tokens": 5600.0,
+        "savings_pct": 73.08,
+        "speedup_ratio": 3.71
+      }
+    ]
+  },
+  "instructor DAG (4 steps, 3 levels)": {
+    "steps": 4,
+    "levels": 3,
+    "parallel_ms": 163.86083303950727,
+    "serial_ms": 226.30325006321073
+  },
+  "wide DAG (6 steps, 3 levels)": {
+    "steps": 6,
+    "levels": 3,
+    "parallel_ms": 171.85741709545255,
+    "serial_ms": 339.33029195759445
+  },
+  "fault": {
+    "no_fallback": {
+      "#E1": "ERR_CORONA_SPIKE(TelemetryScan)",
+      "#E2": "IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3",
+      "#E3": "ERR_UPSTREAM(#E1)",
+      "#E4": "ERR_UPSTREAM(#E3)"
+    },
+    "replanned": {
+      "#E2": "IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3",
+      "#E10": "XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e37_erg/s",
+      "#E11": "Calibrated(XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e37_erg/s)",
+      "#E3": "DeltaV(flux=Calibrated(XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e37_erg/s), density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s",
+      "#E4": "HarmonicLock(vector=DeltaV(flux=Calibrated(XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e37_erg/s), density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s)=STABLE",
+      "#E1": "Calibrated(XRayFlux_backup(Cygnus_X1_Corona_Sector_08)=4.0e37_erg/s)"
+    },
+    "levels_run": [
+      [
+        "#E1",
+        "#E2"
+      ],
+      [
+        "#E10"
+      ],
+      [
+        "#E11"
+      ],
+      [
+        "#E3"
+      ],
+      [
+        "#E4"
+      ]
+    ]
+  },
+  "cost_rows": [
+    {
+      "K": 1,
+      "react_tokens": 1200.0,
+      "rewoo_tokens": 2800.0,
+      "savings_pct": -133.33,
+      "speedup_ratio": 0.43,
+      "react_measured": 1200,
+      "rewoo_measured": 2800
+    },
+    {
+      "K": 2,
+      "react_tokens": 2800.0,
+      "rewoo_tokens": 3200.0,
+      "savings_pct": -14.29,
+      "speedup_ratio": 0.88,
+      "react_measured": 2800,
+      "rewoo_measured": 3200
+    },
+    {
+      "K": 3,
+      "react_tokens": 4800.0,
+      "rewoo_tokens": 3600.0,
+      "savings_pct": 25.0,
+      "speedup_ratio": 1.33,
+      "react_measured": 4800,
+      "rewoo_measured": 3600
+    },
+    {
+      "K": 4,
+      "react_tokens": 7200.0,
+      "rewoo_tokens": 4000.0,
+      "savings_pct": 44.44,
+      "speedup_ratio": 1.8,
+      "react_measured": 7200,
+      "rewoo_measured": 4000
+    },
+    {
+      "K": 5,
+      "react_tokens": 10000.0,
+      "rewoo_tokens": 4400.0,
+      "savings_pct": 56.0,
+      "speedup_ratio": 2.27,
+      "react_measured": 10000,
+      "rewoo_measured": 4400
+    },
+    {
+      "K": 8,
+      "react_tokens": 20800.0,
+      "rewoo_tokens": 5600.0,
+      "savings_pct": 73.08,
+      "speedup_ratio": 3.71,
+      "react_measured": 20800,
+      "rewoo_measured": 5600
+    },
+    {
+      "K": 12,
+      "react_tokens": 40800.0,
+      "rewoo_tokens": 7200.0,
+      "savings_pct": 82.35,
+      "speedup_ratio": 5.67,
+      "react_measured": 40800,
+      "rewoo_measured": 7200
+    },
+    {
+      "K": 16,
+      "react_tokens": 67200.0,
+      "rewoo_tokens": 8800.0,
+      "savings_pct": 86.9,
+      "speedup_ratio": 7.64,
+      "react_measured": 67200,
+      "rewoo_measured": 8800
+    }
+  ]
+}
