@@ -16,7 +16,7 @@
 | Station Role | Cadet Full Name | Deliverable File | Verification Status |
 | :--- | :--- | :--- | :--- |
 | **Systems Architect** | `Fahad Akram` | `rewoo_planner.py` | `PASS (40/40)` |
-| **Communications & Protocol Officer** | `[Insert Name]` | `reflexion_surgeon.py` | `[PASS / VERIFIED]` |
+| **Communications & Protocol Officer** | `Madhurima Lakshmi Prabha` | `reflexion_surgeon.py` | `PASS (11/11)` |
 | **Data & Payload Specialist** | `[Insert Name]` | `memgpt_pager.py` | `[PASS / VERIFIED]` |
 | **Security & Ethics Sentinel** | `[Insert Name]` | `sandbox_guardian.py` | `[PASS / VERIFIED]` |
 
@@ -116,7 +116,11 @@ graph TD
 | **Trial 2** | `KeyError (Line 5)` | `Use dict.get() or verify key 'flux' exists in telemetry packet.` | `False` | `FAIL` |
 | **Trial 3** | `None` | `PASS` | `False` | **PASS** |
 
-- **Protocol Analysis:** `[Explain why Huang et al. (2023) found that intrinsic self-correction fails without an external oracle, and how unit-test grounding + SHA-256 cycle detection guarantee convergence.]`
+The same trajectory is reproduced twice in `python reflexion_surgeon.py`: once with the instructor's mock evaluator and once with an evaluator that really executes each patch against three unit tests (normal packet, `window_sec = 0`, missing `'flux'`) and parses the real Python traceback.
+
+- **Cycle-guard check:** when the Actor returns the same patch again, the loop now stops at trial 2 with `stopped_on_cycle = True` and the unit tests are run only once, instead of re-running the same failing code for all 4 trials.
+
+- **Protocol Analysis:** Huang et al. (2023) showed that intrinsic self-correction, where the model re-reads its own answer and decides by itself whether it is wrong, does not reliably improve results and can even turn correct answers into wrong ones, because the same model that made the mistake is also the judge. Reflexion avoids this by giving the judging role to an external oracle: the Evaluator $M_e$ runs deterministic unit tests, so "pass" and "fail" are facts, not opinions. The traceback also tells the Self-Reflection step *where* and *why* the code failed (`ZeroDivisionError` at line 3, then `KeyError: 'flux'` at line 5), so each reflection $r_k$ turns a concrete error into a concrete constraint for the next patch. The episodic buffer keeps only the last $\Omega = 3$ reflections, $\mathcal{M}_{\text{ep}}^{(k+1)} = \mathrm{Tail}_3(\mathcal{M}_{\text{ep}}^{(k)} \cup \{r_k\})$, so the Actor is guided by its latest lessons and the prompt does not grow without limit. The SHA-256 hash of each patch catches the Actor repeating itself: with deterministic tests a repeated patch must fail in exactly the same way, so the loop stops instead of wasting trials. Together, `max_trials` and the cycle guard guarantee that the loop always terminates, and every trial it does spend tests a new patch. Convergence to a passing patch still depends on the Actor producing a correct fix within the budget, which in our trajectory happens at trial 3.
 
 ### Section C — Data & Payload Specialist (`memgpt_pager.py`)
 - **MemGPT Context Pressure Interrupt Log ($\tau_{\text{warn}} = 0.70$):**
@@ -207,6 +211,31 @@ Topological Parallel Execution Levels: [['#E1', '#E2'], ['#E3'], ['#E4']]
   Solver: Plot the escape burn out of the Cygnus X-1 corona. -> HarmonicLock(vector=DeltaV(flux=XRayFlux(Cygnus_X1_Corona_Sector_08)=4.2e37_erg/s, density=IonDensity(Veil_Nebula_Shock_Front)=14.8_cm^-3)=18.4_km/s)=STABLE
 
 $ python reflexion_surgeon.py
+=== Subsystem 08 (Part 2): Reflexion Surgeon & Traceback Parser Verification ===
+Repair Success: True in 3 trials
+  Trial 1: passed=False | [Reflection Line 3 | ZeroDivisionError]: Fault 'division by zero when window_sec=0'. Constraint for next trial: Guard denominator against zero before dividing telemetry flux. Faulty line: `return packet['flux'] / packet['window_sec']`.
+  Trial 2: passed=False | [Reflection Line 5 | KeyError]: Fault ''flux''. Constraint for next trial: Use dict.get() or verify key 'flux' exists in telemetry packet. Faulty line: `return packet['flux'] / packet['window_sec']`.
+  Trial 3: passed=True | PASS
+[OK] Part 2 (Communications & Protocol Officer) verification passed.
+
+Repair trajectory with real unit tests (doc Section B):
+  Trial 1: exception=ZeroDivisionError | duplicate=False | FAIL | [Reflection Line 3 | ZeroDivisionError]: Fault 'division by zero'. Constraint for next trial: Guard denominator against zero before dividing telemetry flux. Faulty line: `return packet['flux'] / packet['window_sec']`.
+  Trial 2: exception=KeyError | duplicate=False | FAIL | [Reflection Line 5 | KeyError]: Fault ''flux''. Constraint for next trial: Use dict.get() or verify key 'flux' exists in telemetry packet. Faulty line: `return packet['flux'] / packet['window_sec']`.
+  Trial 3: exception=None | duplicate=False | PASS | PASS
+  success=True in 3 trials
+
+  [PASS] parse: file, line, exception and message
+  [PASS] parse: bare AssertionError (no message)
+  [PASS] parse: dotted exception name
+  [PASS] parse: chained traceback keeps the last exception and line
+  [PASS] episodic buffer = Tail_3: 5 reflections in, last 3 kept
+  [PASS] reflection prescribes a constraint and quotes the faulty line
+  [PASS] duplicate hash ignores trailing spaces and blank lines
+  [PASS] cycle guard: Actor repeats its patch -> stopped at trial 2, tests run once
+  [PASS] indentation-only change is a new patch, not a cycle
+  [PASS] budget: never passing -> stops after max_trials
+  [PASS] real unit tests: ZeroDivisionError -> KeyError -> PASS in 3 trials, no duplicates
+--- 11 passed, 0 failed ---
 
 $ python memgpt_pager.py
 
